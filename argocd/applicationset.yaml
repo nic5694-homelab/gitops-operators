@@ -25,6 +25,13 @@ spec:
         argocd.argoproj.io/sync-wave: "0"
     spec:
       project: operators
+      
+      ignoreDifferences:
+      # Used to ignore the dynamic fields managed by metallb
+        - group: ""
+          kind: Service
+          jsonPointers:
+            - /status/loadBalancer/ingress
       sources:
         - chart: '{{.chart}}'
           repoURL: '{{.repoURL}}'
