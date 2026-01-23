@@ -20,27 +20,27 @@ spec:
                   argocd.argoproj.io/secret-type: cluster
   template:
     metadata:
-      name: '{{.name}}-{{.op.name}}'
+      name: '{{.name}}'
       annotations:
         argocd.argoproj.io/sync-wave: "0"
     spec:
       project: operators
       sources:
-        - chart: '{{.op.chart}}'
-          repoURL: '{{.op.repoURL}}'
-          targetRevision: '{{.op.version}}'
+        - chart: '{{.chart}}'
+          repoURL: '{{.repoURL}}'
+          targetRevision: '{{.version}}'
           helm:
-            releaseName: '{{.op.name}}'
+            releaseName: '{{.name}}'
             valueFiles:
-              - $values/apps/{{.op.name}}/values.yaml
-              - $values/apps/{{.op.name}}/clusters/{{.name}}/values.yaml
+              - $values/apps/{{.name}}/values.yaml
+              - $values/apps/{{.name}}/clusters/{{.nameNormalized}}/values.yaml
             ignoreMissingValueFiles: true
         - repoURL: https://github.com/nic5694-homelab/gitops-operators.git
           targetRevision: HEAD
           ref: values
       destination:
         server: '{{.server}}'
-        namespace: '{{.op.namespace}}'
+        namespace: '{{.namespace}}'
       syncPolicy:
         automated:
           prune: true
@@ -49,7 +49,7 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
   templatePatch: |
-    {{- if eq .name "in-cluster" }}
+    {{- if eq .nameNormalized "in-cluster" }}
     metadata:
-      name: '{{.op.name}}'
+      name: '{{.name}}'
     {{- end }}
