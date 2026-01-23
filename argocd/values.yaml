@@ -7,6 +7,22 @@ server:
     requests:
       cpu: 50m
       memory: 64Mi
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - argocd.local
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      cert-manager.io/cluster-issuer: "selfsigned"
+    tls:
+      - hosts:
+          - argocd.local
+        secretName: argocd-tls
+
+configs:
+  params:
+    "server.insecure": "true"
 
 controller:
   replicas: 1
