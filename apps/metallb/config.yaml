@@ -1,0 +1,5 @@
+name: metallb
+chart: metallb
+repoURL: https://metallb.github.io/metallb
+version: 0.14.3
+namespace: metallb-system

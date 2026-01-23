@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: operator-resources
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - matrix:
+        generators:
+          - git:
+              repoURL: https://github.com/nic5694-homelab/gitops-operators.git
+              revision: HEAD
+              directories:
+                - path: "apps/*/clusters/*/resources"
+          - clusters:
+              selector:
+                matchLabels:
+                  argocd.argoproj.io/secret-type: cluster
+  template:
+    metadata:
+      name: '{{.name}}-{{index .path.segments 1}}-resources'
+      annotations:
+        argocd.argoproj.io/sync-wave: "5"
+    spec:
+      project: operators
+      source:
+        repoURL: https://github.com/nic5694-homelab/gitops-operators.git
+        targetRevision: HEAD
+        path: '{{.path.path}}'
+      destination:
+        server: '{{.server}}'
+        namespace: '{{index .path.segments 1}}-system'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+  templatePatch: |
+    {{- if eq .name "in-cluster" }}
+    metadata:
+      name: '{{index .path.segments 1}}-resources'
+    {{- end }}

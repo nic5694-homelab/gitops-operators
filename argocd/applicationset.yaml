@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: operators
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - matrix:
+        generators:
+          - git:
+              repoURL: https://github.com/nic5694-homelab/gitops-operators.git
+              revision: HEAD
+              files:
+                - path: "apps/**/config.yaml"
+          - clusters:
+              selector:
+                matchLabels:
+                  argocd.argoproj.io/secret-type: cluster
+  template:
+    metadata:
+      name: '{{.name}}-{{.op.name}}'
+      annotations:
+        argocd.argoproj.io/sync-wave: "0"
+    spec:
+      project: operators
+      sources:
+        - chart: '{{.op.chart}}'
+          repoURL: '{{.op.repoURL}}'
+          targetRevision: '{{.op.version}}'
+          helm:
+            releaseName: '{{.op.name}}'
+            valueFiles:
+              - $values/apps/{{.op.name}}/values.yaml
+              - $values/apps/{{.op.name}}/clusters/{{.name}}/values.yaml
+            ignoreMissingValueFiles: true
+        - repoURL: https://github.com/nic5694-homelab/gitops-operators.git
+          targetRevision: HEAD
+          ref: values
+      destination:
+        server: '{{.server}}'
+        namespace: '{{.op.namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+  templatePatch: |
+    {{- if eq .name "in-cluster" }}
+    metadata:
+      name: '{{.op.name}}'
+    {{- end }}
