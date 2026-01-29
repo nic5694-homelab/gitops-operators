@@ -1,7 +1,8 @@
 name: wireguard
 chart: wireguard
-repoURL: https://raw.githubusercontent.com/sosedoff/helm-wireguard/main/repo
-version: 0.1.0
+repoURL: https://bryopsida.github.io/wireguard-chart
+version: 0.31.0
 namespace: wireguard
 environments:
   - dev
+
