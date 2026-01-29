@@ -4,3 +4,9 @@ autoscaling:
 
 # Use single replica for dev
 replicaCount: 1
+
+# Disable topologySpreadConstraints (matchLabelKeys not supported in K8s < 1.27)
+topologySpreadConstraints: []
+
+# Disable pod anti-affinity for single-node minikube
+affinity: {}
