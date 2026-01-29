@@ -38,6 +38,11 @@ spec:
           jqPathExpressions:
             - .spec.metrics
             - .status
+      # Ignore topologySpreadConstraints schema issues (matchLabelKeys not in older K8s)
+        - group: apps
+          kind: Deployment
+          jqPathExpressions:
+            - .spec.template.spec.topologySpreadConstraints
       sources:
         - chart: '{{.chart}}'
           repoURL: '{{.repoURL}}'
