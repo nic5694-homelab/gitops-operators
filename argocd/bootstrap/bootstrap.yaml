@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/nic5694-homelab/gitops-operators.git
-    targetRevision: HEAD
+    targetRevision: main
     path: argocd
     directory:
       recurse: false
