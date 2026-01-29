@@ -6,3 +6,9 @@ namespace: metallb-system
 environments:
   - dev
   - prd
+ignoredifferences:
+  # Ignore dynamic loadBalancer status managed by metallb
+  - group: ""
+    kind: Service
+    jsonPointers:
+      - /status/loadBalancer/ingress

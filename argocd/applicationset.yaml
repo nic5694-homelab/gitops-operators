@@ -26,23 +26,7 @@ spec:
     spec:
       project: operators
       
-      ignoreDifferences:
-      # ignore the dynamic fields managed by metallb
-        - group: ""
-          kind: Service
-          jsonPointers:
-            - /status/loadBalancer/ingress
-      # Ignore HPA API version differences 
-        - group: autoscaling
-          kind: HorizontalPodAutoscaler
-          jqPathExpressions:
-            - .spec.metrics
-            - .status
-      # Ignore topologySpreadConstraints schema issues (matchLabelKeys not in older K8s)
-        - group: apps
-          kind: Deployment
-          jqPathExpressions:
-            - .spec.template.spec.topologySpreadConstraints
+      ignoreDifferences: {{ toJson .ignoreDifferences }}
       sources:
         - chart: '{{.chart}}'
           repoURL: '{{.repoURL}}'

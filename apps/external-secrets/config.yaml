@@ -6,3 +6,4 @@ namespace: external-secrets
 environments:
   - dev
   - prd
+ignoredifferences: []

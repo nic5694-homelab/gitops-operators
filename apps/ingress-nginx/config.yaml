@@ -6,3 +6,10 @@ namespace: ingress-nginx
 environments:
   - dev
   - prd
+ignoredifferences:
+  # Ignore HPA API version differences (v1 vs v2)
+  - group: autoscaling
+    kind: HorizontalPodAutoscaler
+    jqPathExpressions:
+      - .spec.metrics
+      - .status
