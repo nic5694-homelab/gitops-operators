@@ -10,8 +10,8 @@ spec:
     targetRevision: main
     path: argocd
     directory:
-      recurse: false
-      include: "{project.yaml,applicationset.yaml,resources-applicationset.yaml}"
+      recurse: true
+      include: "{project.yaml,applicationset.yaml,resources-applicationset.yaml,clusters/*.yaml}"
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
