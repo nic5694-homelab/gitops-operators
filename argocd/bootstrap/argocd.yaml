@@ -14,7 +14,7 @@ spec:
         valueFiles:
           - $values/argocd/values.yaml
     - repoURL: https://github.com/nic5694-homelab/gitops-operators.git
-      targetRevision: HEAD
+      targetRevision: main
       ref: values
   destination:
     server: https://kubernetes.default.svc
