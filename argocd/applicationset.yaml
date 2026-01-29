@@ -25,26 +25,6 @@ spec:
         argocd.argoproj.io/sync-wave: "0"
     spec:
       project: operators
-      
-      {{- if .ignoreDifferences }}
-      ignoreDifferences:
-        {{- range .ignoreDifferences }}
-        - group: '{{ .group }}'
-          kind: '{{ .kind }}'
-          {{- if .jsonPointers }}
-          jsonPointers:
-            {{- range .jsonPointers }}
-            - '{{ . }}'
-            {{- end }}
-          {{- end }}
-          {{- if .jqPathExpressions }}
-          jqPathExpressions:
-            {{- range .jqPathExpressions }}
-            - '{{ . }}'
-            {{- end }}
-          {{- end }}
-        {{- end }}
-      {{- end }}
       sources:
         - chart: '{{.chart}}'
           repoURL: '{{.repoURL}}'
@@ -69,15 +49,14 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
           - RespectIgnoreDifferences=true
-  # Only create app if cluster name is in the environments list
   templatePatch: |
-    {{- $envMatch := false }}
-    {{- range .environments }}
-      {{- if eq . $.nameNormalized }}
-        {{- $envMatch = true }}
-      {{- end }}
-    {{- end }}
-    {{- if not $envMatch }}
+    {{ $envMatch := false }}
+    {{ range .environments }}
+      {{ if eq . $.nameNormalized }}
+        {{ $envMatch = true }}
+      {{ end }}
+    {{ end }}
+    {{ if not $envMatch }}
     metadata:
       name: ''
-    {{- end }}
+    {{ end }}
