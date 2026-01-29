@@ -3,5 +3,4 @@ chart: wireguard
 repoURL: https://raw.githubusercontent.com/sosedoff/helm-wireguard/main/repo/wireguard
 namespace: wireguard
 environments:
-  - prd
   - dev
