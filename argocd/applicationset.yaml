@@ -26,7 +26,25 @@ spec:
     spec:
       project: operators
       
-      ignoreDifferences: {{ toJson .ignoreDifferences }}
+      {{- if .ignoreDifferences }}
+      ignoreDifferences:
+        {{- range .ignoreDifferences }}
+        - group: '{{ .group }}'
+          kind: '{{ .kind }}'
+          {{- if .jsonPointers }}
+          jsonPointers:
+            {{- range .jsonPointers }}
+            - '{{ . }}'
+            {{- end }}
+          {{- end }}
+          {{- if .jqPathExpressions }}
+          jqPathExpressions:
+            {{- range .jqPathExpressions }}
+            - '{{ . }}'
+            {{- end }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
       sources:
         - chart: '{{.chart}}'
           repoURL: '{{.repoURL}}'

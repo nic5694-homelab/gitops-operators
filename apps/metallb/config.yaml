@@ -6,7 +6,7 @@ namespace: metallb-system
 environments:
   - dev
   - prd
-ignoredifferences:
+ignoreDifferences:
   # Ignore dynamic loadBalancer status managed by metallb
   - group: ""
     kind: Service

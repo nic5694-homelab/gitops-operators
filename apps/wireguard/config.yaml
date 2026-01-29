@@ -5,7 +5,7 @@ version: 0.31.0
 namespace: wireguard
 environments:
   - dev
-ignoredifferences:
+ignoreDifferences:
   # Ignore topologySpreadConstraints schema issues (matchLabelKeys not in older K8s)
   - group: apps
     kind: Deployment

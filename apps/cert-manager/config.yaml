@@ -6,4 +6,4 @@ namespace: cert-manager
 environments:
   - dev
   - prd
-ignoredifferences: []
+ignoreDifferences: []
