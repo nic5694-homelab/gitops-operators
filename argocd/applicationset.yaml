@@ -66,6 +66,7 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
+          - RespectIgnoreDifferences=true
   # Only create app if cluster name is in the environments list
   templatePatch: |
     {{- $envMatch := false }}
