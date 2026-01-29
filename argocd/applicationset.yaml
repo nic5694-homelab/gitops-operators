@@ -20,7 +20,7 @@ spec:
                   argocd.argoproj.io/secret-type: cluster
   template:
     metadata:
-      name: '{{.name}}'
+      name: '{{.name}}-{{.nameNormalized}}'
       annotations:
         argocd.argoproj.io/sync-wave: "0"
     spec:
@@ -55,8 +55,15 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
+  # Only create app if cluster name is in the environments list
   templatePatch: |
-    {{- if eq .nameNormalized "in-cluster" }}
+    {{- $envMatch := false }}
+    {{- range .environments }}
+      {{- if eq . $.nameNormalized }}
+        {{- $envMatch = true }}
+      {{- end }}
+    {{- end }}
+    {{- if not $envMatch }}
     metadata:
-      name: '{{.name}}'
+      name: ''
     {{- end }}

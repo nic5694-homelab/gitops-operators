@@ -3,3 +3,6 @@ chart: cert-manager
 repoURL: https://charts.jetstack.io
 version: v1.14.0
 namespace: cert-manager
+environments:
+  - dev
+  - prd

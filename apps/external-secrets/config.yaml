@@ -3,3 +3,6 @@ chart: external-secrets
 repoURL: https://charts.external-secrets.io
 version: 0.9.13
 namespace: external-secrets
+environments:
+  - dev
+  - prd
