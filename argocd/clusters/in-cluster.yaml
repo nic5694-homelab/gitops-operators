@@ -5,10 +5,10 @@ metadata:
   namespace: argocd
   labels:
     argocd.argoproj.io/secret-type: cluster
-    environment: homelab
+    environment: dev
   annotations:
     managed-by: argocd
 type: Opaque
 stringData:
-  name: homelab
+  name: dev
   server: https://kubernetes.default.svc
