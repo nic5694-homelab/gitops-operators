@@ -1,0 +1,6 @@
+# Disable autoscaling for dev environment (not needed in minikube)
+autoscaling:
+  enabled: false
+
+# Use single replica for dev
+replicaCount: 1
