@@ -9,15 +9,16 @@ spec:
   generators:
     - matrix:
         generators:
-          - git:
-              repoURL: https://github.com/nic5694-homelab/gitops-operators.git
-              revision: HEAD
-              directories:
-                - path: "apps/*/clusters/*/resources"
           - clusters:
               selector:
                 matchLabels:
                   argocd.argoproj.io/secret-type: cluster
+          - git:
+              repoURL: https://github.com/nic5694-homelab/gitops-operators.git
+              revision: HEAD
+              directories:
+                # Use cluster name from first generator to match environment folder
+                - path: "apps/*/clusters/{{.name}}/resources"
   template:
     metadata:
       name: '{{.name}}-{{index .path.segments 1}}-resources'
@@ -38,8 +39,3 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
-  templatePatch: |
-    {{- if eq .name "in-cluster" }}
-    metadata:
-      name: '{{index .path.segments 1}}-resources'
-    {{- end }}
