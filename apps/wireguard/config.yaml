@@ -1,7 +1,7 @@
 name: wireguard
-chart: wireguard
-repoURL: https://raw.githubusercontent.com/sosedoff/helm-wireguard/main/repo/wireguard
-version: 0.1.10
+chart: wireguard/wireguard
+repoURL: https://raw.githubusercontent.com/sosedoff/helm-wireguard/main/repo
+version: 0.1.0
 namespace: wireguard
 environments:
   - dev
