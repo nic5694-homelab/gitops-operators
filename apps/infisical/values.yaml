@@ -1,32 +1,28 @@
 # Infisical self-hosted configuration
-# Note: You must create the infisical-secrets secret before deploying:
-# kubectl create namespace infisical
-# kubectl create secret generic infisical-secrets -n infisical \
-#   --from-literal=AUTH_SECRET="$(openssl rand -base64 32)" \
-#   --from-literal=ENCRYPTION_KEY="$(openssl rand -hex 16)" \
-#   --from-literal=SITE_URL="http://localhost:8080"
+# The required secrets (ENCRYPTION_KEY, JWT secrets) are auto-generated if not provided
 
-infisical:
+backend:
+  enabled: true
+  replicaCount: 1  # Single replica for dev
   image:
     repository: infisical/infisical
-    tag: "v0.151.0"
+    tag: "v0.151.0-postgres"
     pullPolicy: IfNotPresent
-  replicaCount: 1  # Single replica for dev
 
-# Disable ingress for minikube - use port-forward instead
+frontend:
+  enabled: true
+  replicaCount: 1
+
+# In-cluster MongoDB (for dev/testing only)
+mongodb:
+  enabled: true
+  persistence:
+    size: 1Gi
+
+# Backend environment variables (most are auto-generated)
+backendEnvironmentVariables:
+  SITE_URL: "http://localhost:8080"
+
+# Ingress disabled for minikube - use port-forward instead
 ingress:
   enabled: false
-
-# In-cluster PostgreSQL (for dev/testing only)
-postgresql:
-  enabled: true
-  primary:
-    persistence:
-      size: 1Gi
-
-# In-cluster Redis (for dev/testing only)
-redis:
-  enabled: true
-  master:
-    persistence:
-      size: 1Gi
