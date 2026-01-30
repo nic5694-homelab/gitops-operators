@@ -12,3 +12,5 @@ ignoreDifferences:
     kind: Service
     jsonPointers:
       - /status/loadBalancer/ingress
+    jqPathExpressions:
+      - .status.loadBalancer.ingress[].ipMode

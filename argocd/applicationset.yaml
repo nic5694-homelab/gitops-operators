@@ -60,3 +60,23 @@ spec:
     metadata:
       name: ''
     {{ end }}
+    {{ if .ignoreDifferences }}
+    spec:
+      ignoreDifferences:
+      {{ range .ignoreDifferences }}
+        - group: '{{ .group }}'
+          kind: '{{ .kind }}'
+          {{ if .jsonPointers }}
+          jsonPointers:
+          {{ range .jsonPointers }}
+            - '{{ . }}'
+          {{ end }}
+          {{ end }}
+          {{ if .jqPathExpressions }}
+          jqPathExpressions:
+          {{ range .jqPathExpressions }}
+            - '{{ . }}'
+          {{ end }}
+          {{ end }}
+      {{ end }}
+    {{ end }}

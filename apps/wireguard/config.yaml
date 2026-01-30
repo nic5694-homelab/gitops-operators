@@ -3,9 +3,13 @@ chart: wireguard
 repoURL: https://bryopsida.github.io/wireguard-chart
 version: 0.31.0
 namespace: wireguard
-environments:
-  - dev
+environments: []
 ignoreDifferences:
+  # Ignore ipMode field on LoadBalancer Services (not in older K8s schema)
+  - group: ""
+    kind: Service
+    jqPathExpressions:
+      - .status.loadBalancer.ingress[].ipMode
   # Ignore topologySpreadConstraints schema issues (matchLabelKeys not in older K8s)
   - group: apps
     kind: Deployment
