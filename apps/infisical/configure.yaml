@@ -1,8 +1,0 @@
-name: infisical
-chart: infisical-helm-charts
-repoURL: https://infisical.github.io
-version: 0.4.2
-namespace: infisical
-environments:
-  - dev
-ignoreDifferences: []

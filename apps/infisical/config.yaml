@@ -1,0 +1,8 @@
+name: infisical
+chart: infisical-standalone
+repoURL: https://dl.cloudsmith.io/public/infisical/helm-charts/helm/charts/
+version: 0.7.0
+namespace: infisical
+environments:
+  - dev
+ignoreDifferences: []
