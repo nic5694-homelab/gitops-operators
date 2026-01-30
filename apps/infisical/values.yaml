@@ -4,11 +4,6 @@
 backend:
   enabled: true
   replicaCount: 1  # Single replica for dev
-  image:
-    repository: infisical/infisical
-    tag: "latest"
-    pullPolicy: Always
-
 frontend:
   enabled: true
   replicaCount: 1
@@ -16,20 +11,12 @@ frontend:
 # In-cluster MongoDB
 mongodb:
   enabled: true
-  image:
-    registry: docker.io
-    repository: bitnami/mongodb
-    tag: "6.0"
   persistence:
     size: 1Gi
 
 # In-cluster Redis
 redis:
   enabled: true
-  image:
-    registry: docker.io
-    repository: bitnami/redis
-    tag: "7.0"
 
 # Backend environment variables (most are auto-generated)
 backendEnvironmentVariables:
