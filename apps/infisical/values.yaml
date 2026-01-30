@@ -4,19 +4,32 @@
 backend:
   enabled: true
   replicaCount: 1  # Single replica for dev
+  image:
+    repository: infisical/infisical
+    tag: "latest"
+    pullPolicy: Always
+
 frontend:
   enabled: true
   replicaCount: 1
 
-# In-cluster MongoDB
+# In-cluster MongoDB - override outdated image tag
 mongodb:
   enabled: true
+  image:
+    repository: bitnami/mongodb
+    tag: "latest"
+    pullPolicy: IfNotPresent
   persistence:
     size: 1Gi
 
-# In-cluster Redis
+# In-cluster Redis - override outdated image tag  
 redis:
   enabled: true
+  image:
+    repository: bitnami/redis
+    tag: "latest"
+    pullPolicy: IfNotPresent
 
 # Backend environment variables (most are auto-generated)
 backendEnvironmentVariables:
