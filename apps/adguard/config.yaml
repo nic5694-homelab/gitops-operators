@@ -7,7 +7,7 @@ environments:
   - dev
   - prd
 ignoreDifferences:
-  - group: ''
+  - group:
     kind: Service
     jsonPointers:
       - /status
