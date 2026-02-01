@@ -1,8 +1,8 @@
-name: wireguard
-chart: wg-access-server
-repoURL: https://freifunkMUC.github.io/wg-access-server-chart
-version: 0.13.1
-namespace: wireguard
-environments: [prd]
-ignoreDifferences: []
+# name: wireguard
+# chart: wg-access-server
+# repoURL: https://freifunkMUC.github.io/wg-access-server-chart
+# version: 0.13.1
+# namespace: wireguard
+# environments: [prd]
+# ignoreDifferences: []
 

@@ -50,20 +50,6 @@ spec:
           - ServerSideApply=true
           - RespectIgnoreDifferences=true
   templatePatch: |
-    {{ $envMatch := false }}
-    {{ $hasEnvironments := hasKey . "environments" }}
-    {{ $environments := index . "environments" }}
-    {{ if $hasEnvironments }}
-    {{ if gt (len $environments) 0 }}
-    {{ range $environments }}
-      {{ if eq . $.nameNormalized }}
-        {{ $envMatch = true }}
-      {{ end }}
-    {{ end }}
-    {{ end }}
-    {{ if not $envMatch }}
-    spec: null
-    {{ else }}
     {{ $ignoreDiffs := index . "ignoreDifferences" }}
     {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
     spec:
@@ -86,30 +72,4 @@ spec:
           {{ end }}
           {{ end }}
       {{ end }}
-    {{ end }}
-    {{ end }}
-    {{ else }}
-    {{ $ignoreDiffs := index . "ignoreDifferences" }}
-    {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
-    spec:
-      ignoreDifferences:
-      {{ range $ignoreDiffs }}
-        - group: '{{ index . "group" }}'
-          kind: '{{ index . "kind" }}'
-          {{ $jsonPointers := index . "jsonPointers" }}
-          {{ if $jsonPointers }}
-          jsonPointers:
-          {{ range $jsonPointers }}
-            - '{{ . }}'
-          {{ end }}
-          {{ end }}
-          {{ $jqExpressions := index . "jqPathExpressions" }}
-          {{ if $jqExpressions }}
-          jqPathExpressions:
-          {{ range $jqExpressions }}
-            - '{{ . }}'
-          {{ end }}
-          {{ end }}
-      {{ end }}
-    {{ end }}
     {{ end }}
