@@ -58,11 +58,10 @@ spec:
         {{ $envMatch = true }}
       {{ end }}
     {{ end }}
-    {{ end }}
     {{ if not $envMatch }}
-    metadata:
-      name: ''
-    {{ end }}
+    spec:
+      $patch: delete
+    {{ else }}
     {{ $ignoreDiffs := index . "ignoreDifferences" }}
     {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
     spec:
@@ -85,4 +84,30 @@ spec:
           {{ end }}
           {{ end }}
       {{ end }}
+    {{ end }}
+    {{ end }}
+    {{ else }}
+    {{ $ignoreDiffs := index . "ignoreDifferences" }}
+    {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
+    spec:
+      ignoreDifferences:
+      {{ range $ignoreDiffs }}
+        - group: '{{ index . "group" }}'
+          kind: '{{ index . "kind" }}'
+          {{ $jsonPointers := index . "jsonPointers" }}
+          {{ if $jsonPointers }}
+          jsonPointers:
+          {{ range $jsonPointers }}
+            - '{{ . }}'
+          {{ end }}
+          {{ end }}
+          {{ $jqExpressions := index . "jqPathExpressions" }}
+          {{ if $jqExpressions }}
+          jqPathExpressions:
+          {{ range $jqExpressions }}
+            - '{{ . }}'
+          {{ end }}
+          {{ end }}
+      {{ end }}
+    {{ end }}
     {{ end }}
