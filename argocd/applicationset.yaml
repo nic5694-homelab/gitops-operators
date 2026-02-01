@@ -51,12 +51,15 @@ spec:
           - RespectIgnoreDifferences=true
   templatePatch: |
     {{ $envMatch := false }}
+    {{ $hasEnvironments := hasKey . "environments" }}
     {{ $environments := index . "environments" }}
-    {{ if $environments }}
+    {{ if $hasEnvironments }}
+    {{ if gt (len $environments) 0 }}
     {{ range $environments }}
       {{ if eq . $.nameNormalized }}
         {{ $envMatch = true }}
       {{ end }}
+    {{ end }}
     {{ end }}
     {{ if not $envMatch }}
     spec:
