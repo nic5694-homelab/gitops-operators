@@ -7,7 +7,6 @@ environments:
   - dev
   - prd
 ignoreDifferences:
-  # Ignore status field on LoadBalancer Services (managed by K8s/MetalLB, not by us)
   - group: ''
     kind: Service
     jsonPointers:
