@@ -13,3 +13,8 @@ ignoreDifferences:
     jqPathExpressions:
       - .spec.metrics
       - .status
+  # Ignore ipMode field in Service status
+  - group: ""
+    kind: Service
+    jsonPointers:
+      - /status
