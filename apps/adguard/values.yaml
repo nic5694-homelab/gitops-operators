@@ -10,7 +10,9 @@ env:
 
 service:
   main:
-    type: ClusterIP
+    type: LoadBalancer
+    annotations:
+      metallb.universe.tf/loadBalancerIPs: 192.168.0.242
     ports:
       http:
         port: 3000
