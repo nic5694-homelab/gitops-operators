@@ -1,24 +1,8 @@
 name: wireguard
-chart: wireguard
-repoURL: https://bryopsida.github.io/wireguard-chart
-version: 0.31.0
+chart: wg-access-server
+repoURL: https://freifunkMUC.github.io/wg-access-server-chart
+version: 0.13.1
 namespace: wireguard
 environments: []
-ignoreDifferences:
-  # Ignore ipMode field on LoadBalancer Services (not in older K8s schema)
-  - group: ""
-    kind: Service
-    jqPathExpressions:
-      - .status.loadBalancer.ingress[].ipMode
-  # Ignore topologySpreadConstraints schema issues (matchLabelKeys not in older K8s)
-  - group: apps
-    kind: Deployment
-    jqPathExpressions:
-      - .spec.template.spec.topologySpreadConstraints
-  # Ignore HPA API version differences
-  - group: autoscaling
-    kind: HorizontalPodAutoscaler
-    jqPathExpressions:
-      - .spec.metrics
-      - .status
+ignoreDifferences: []
 

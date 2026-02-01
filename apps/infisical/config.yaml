@@ -3,6 +3,5 @@ chart: infisical
 repoURL: https://dl.cloudsmith.io/public/infisical/helm-charts/helm/charts/
 version: 0.4.2
 namespace: infisical
-environments:
-  - dev
+environments: []
 ignoreDifferences: []
