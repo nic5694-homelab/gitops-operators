@@ -62,8 +62,7 @@ spec:
     {{ end }}
     {{ end }}
     {{ if not $envMatch }}
-    spec:
-      $patch: delete
+    spec: null
     {{ else }}
     {{ $ignoreDiffs := index . "ignoreDifferences" }}
     {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
