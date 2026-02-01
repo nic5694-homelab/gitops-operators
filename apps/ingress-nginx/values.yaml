@@ -4,3 +4,5 @@ controller:
     requests:
       cpu: 100m
       memory: 90Mi
+  service:
+    loadBalancerIP: 192.168.0.243

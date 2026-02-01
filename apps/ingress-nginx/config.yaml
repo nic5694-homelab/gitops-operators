@@ -16,5 +16,5 @@ ignoreDifferences:
   # Ignore ipMode field in Service status
   - group: ""
     kind: Service
-    jsonPointers:
-      - /status
+    jqPathExpressions:
+      - .status.loadBalancer.ingress
