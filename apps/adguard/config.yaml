@@ -1,0 +1,9 @@
+name: adguard
+chart: adguard-home
+repoURL: https://charts.gabe565.com
+version: 0.3.25
+namespace: adguard
+environments:
+  - dev
+  - prd
+ignoreDifferences: []
