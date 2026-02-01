@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
+  goTemplateOptions: ["missingkey=default"]
   generators:
     - matrix:
         generators:
@@ -51,30 +51,36 @@ spec:
           - RespectIgnoreDifferences=true
   templatePatch: |
     {{ $envMatch := false }}
-    {{ range .environments }}
+    {{ $environments := index . "environments" }}
+    {{ if $environments }}
+    {{ range $environments }}
       {{ if eq . $.nameNormalized }}
         {{ $envMatch = true }}
       {{ end }}
+    {{ end }}
     {{ end }}
     {{ if not $envMatch }}
     metadata:
       name: ''
     {{ end }}
-    {{ if gt (len .ignoreDifferences) 0 }}
+    {{ $ignoreDiffs := index . "ignoreDifferences" }}
+    {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
     spec:
       ignoreDifferences:
-      {{ range .ignoreDifferences }}
-        - group: '{{ .group }}'
-          kind: '{{ .kind }}'
-          {{ if .jsonPointers }}
+      {{ range $ignoreDiffs }}
+        - group: '{{ index . "group" }}'
+          kind: '{{ index . "kind" }}'
+          {{ $jsonPointers := index . "jsonPointers" }}
+          {{ if $jsonPointers }}
           jsonPointers:
-          {{ range .jsonPointers }}
+          {{ range $jsonPointers }}
             - '{{ . }}'
           {{ end }}
           {{ end }}
-          {{ if .jqPathExpressions }}
+          {{ $jqExpressions := index . "jqPathExpressions" }}
+          {{ if $jqExpressions }}
           jqPathExpressions:
-          {{ range .jqPathExpressions }}
+          {{ range $jqExpressions }}
             - '{{ . }}'
           {{ end }}
           {{ end }}
