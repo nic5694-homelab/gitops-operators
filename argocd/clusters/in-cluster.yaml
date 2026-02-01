@@ -5,10 +5,10 @@ metadata:
   namespace: argocd
   labels:
     argocd.argoproj.io/secret-type: cluster
-    environment: dev
+    environment: prd
   annotations:
     managed-by: argocd
 type: Opaque
 stringData:
-  name: dev
+  name: prd
   server: https://kubernetes.default.svc

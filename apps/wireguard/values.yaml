@@ -1,27 +1,14 @@
-network: 10.10.0.1/24 # <- your wireguard server peer address
-privateKey: <WG_PRIVATE_KEY>
-publicKey: <WG_PUBLIC_KEY>
+# wg-access-server default configuration
+# See https://github.com/freifunkMUC/wg-access-server-chart for all options
 
-# By default we will use DaemonSet type of deployment to run wireguard server peer
-# on each K8s node. To switch to regular deployment uncomment:
-# replicas: 1
-# deployKind: Deployment
+# Persistence for device storage
+persistence:
+  enabled: true
+  size: "100Mi"
+  accessModes:
+    - ReadWriteOnce
 
-loadbalancer:
-  annotations:
-    # These annotations are specific to DigitalOcean but should be similar in other cloud providers.
-    service.beta.kubernetes.io/do-loadbalancer-name: "k8s-wireguard"
-    service.beta.kubernetes.io/do-loadbalancer-size-unit: "1"
-    service.beta.kubernetes.io/do-loadbalancer-healthcheck-port: "8080"
-    service.beta.kubernetes.io/do-loadbalancer-healthcheck-protocol: "http"
-    service.beta.kubernetes.io/do-loadbalancer-healthcheck-path: "/health"
-
-peers:
-  user1:
-    privateKey: <...>
-    publicKey: <...>
-    src: 10.10.0.2/32
-  user2:
-    privateKey: <...>
-    publicKey: <...>
-    src: 10.10.0.3/32
+# Disable IPv6 by default (most clusters don't support it)
+config:
+  vpn:
+    cidrv6: ""

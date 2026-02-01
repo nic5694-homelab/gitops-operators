@@ -1,12 +1,31 @@
-# Disable autoscaling for dev environment (not needed in minikube)
-autoscaling:
-  enabled: false
+# wg-access-server dev configuration for minikube
 
-# Use single replica for dev
-replicaCount: 1
+# Admin credentials for the web UI
+web:
+  config:
+    adminUsername: admin
+    # Password will be auto-generated if not set - retrieve with:
+    # kubectl get secret -n wireguard wireguard-wg-access-server -o jsonpath="{.data.admin-password}" | base64 -d
+    adminPassword: ""
+  service:
+    # Use NodePort for minikube access
+    type: NodePort
 
-# Disable topologySpreadConstraints (matchLabelKeys not supported in K8s < 1.27)
-topologySpreadConstraints: []
+# WireGuard configuration
+wireguard:
+  config:
+    # Reference the secret created by ExternalSecrets
+    existingSecret: wireguard-credentials
+    secretRefKeys:
+      privateKey: wireguard-private-key
+  service:
+    # Use NodePort for minikube
+    type: NodePort
 
-# Disable pod anti-affinity for single-node minikube
-affinity: {}
+# Persistence for device storage
+persistence:
+  enabled: true
+  size: "100Mi"
+
+# Single replica for dev
+replicas: 1

@@ -1,7 +1,7 @@
 name: external-secrets
 chart: external-secrets
 repoURL: https://charts.external-secrets.io
-version: 0.9.13
+version: 0.10.0
 namespace: external-secrets
 environments:
   - dev
