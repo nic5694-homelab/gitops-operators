@@ -60,7 +60,7 @@ spec:
     metadata:
       name: ''
     {{ end }}
-    {{ if .ignoreDifferences }}
+    {{ if gt (len .ignoreDifferences) 0 }}
     spec:
       ignoreDifferences:
       {{ range .ignoreDifferences }}
