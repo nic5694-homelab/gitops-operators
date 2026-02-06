@@ -133,7 +133,9 @@ config: |
     safesearch_cache_size: 1048576
     parental_cache_size: 1048576
     cache_time: 30
-    rewrites: []
+    rewrites:
+      - domain: proxmox.lab
+        answer: 192.168.0.201
     blocked_services: []
     upstream_timeout: 10s
     private_networks: []
