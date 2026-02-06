@@ -2,7 +2,7 @@ global:
   domain: argocd.local
 
 server:
-  replicas: 1
+  replicas: 2
   resources:
     requests:
       cpu: 50m
@@ -25,28 +25,28 @@ configs:
     "server.insecure": "true"
 
 controller:
-  replicas: 1
+  replicas: 2
   resources:
     requests:
       cpu: 100m
       memory: 128Mi
 
 repoServer:
-  replicas: 1
+  replicas: 3
   resources:
     requests:
       cpu: 100m
-      memory: 256Mi
+      memory: 512Mi
     limits:
       cpu: 1
-      memory: 1Gi
+      memory: 4Gi
 
 applicationSet:
   replicas: 1
   resources:
     requests:
       cpu: 50m
-      memory: 64Mi
+      memory: 128Mi
 
 redis:
   resources:
