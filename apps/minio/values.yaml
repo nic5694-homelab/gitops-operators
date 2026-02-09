@@ -409,7 +409,7 @@ makeServiceAccountJob:
 ##
 buckets: 
   - name: images
-    policy: readwrite
+    policy: public
     purge: false
     versioning: false
     objectlocking: false
