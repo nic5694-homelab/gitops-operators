@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ids
+  namespace: ids
+  labels:
+    app: ids
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ids
+  template:
+    metadata:
+      labels:
+        app: ids
+    spec:
+      containers:
+        - name: ids
+          image: nic5694/ids:0.1
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
