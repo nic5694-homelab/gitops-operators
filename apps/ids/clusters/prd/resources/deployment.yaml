@@ -19,7 +19,7 @@ spec:
         - name: ids
           image: nic5694/ids:0.1
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           resources:
             requests:
               cpu: 100m
