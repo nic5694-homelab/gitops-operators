@@ -1,5 +1,5 @@
 global:
-  domain: argocd.local
+  domain: argocd.homelab.com
 
 server:
   replicas: 2
@@ -11,13 +11,13 @@ server:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - argocd.local
+      - argocd.homelab.com
     annotations:
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-      cert-manager.io/cluster-issuer: "selfsigned"
+      cert-manager.io/cluster-issuer: "letsencrypt-production"
     tls:
       - hosts:
-          - argocd.local
+          - argocd.homelab.com
         secretName: argocd-tls
 
 configs:

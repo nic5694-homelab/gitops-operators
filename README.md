@@ -10,28 +10,18 @@ Cluster operators managed via ArgoCD ApplicationSets with multi-cluster support.
 │   ├── values.yaml                     # ArgoCD Helm values
 │   ├── applicationset.yaml             # Operators (sync-wave: 0)
 │   ├── resources-applicationset.yaml   # Post-install CRDs (sync-wave: 1)
-│   └── bootstrap/
-│       ├── bootstrap.yaml              # Entry point
-│       └── argocd.yaml                 # ArgoCD self-management
+│   ├── bootstrap/
+│   │   ├── bootstrap.yaml              # startup point
+│   │   └── argocd.yaml                 # ArgoCD self-management
+│   └── clusters/
+│       └── in-cluster.yaml
 └── apps/
-    ├── cert-manager/
-    │   ├── config.yaml
-    │   └── values.yaml
-    ├── external-secrets/
-    │   ├── config.yaml
-    │   └── values.yaml
-    ├── ingress-nginx/
-    │   ├── config.yaml
-    │   └── values.yaml
-    └── metallb/
-        ├── config.yaml
-        ├── values.yaml
-        └── clusters/
-            └── homelab/
-                └── resources/
-                    ├── kustomization.yaml
-                    ├── ip-pool.yaml
-                    └── l2-advertisement.yaml
+    |-- service-name/
+        |-- config.yaml - (optional) used to point to a helm repo if needed
+        |-- clusters/
+            |-- {env} - dev is used to test on minikube prd is to deploy in the cluster
+                |-- resources - all the manifests to deploy related to the services
+
 ```
 
 ## Quick Start
@@ -78,22 +68,24 @@ Cluster operators managed via ArgoCD ApplicationSets with multi-cluster support.
 
 ## Cluster-Specific Configuration
 
-Override values per cluster:
+Override values per cluster environment:
 
 ```
 apps/metallb/
-├── values.yaml                     # Defaults
+├── values.yaml                     # Defaults (applies to all environments)
 └── clusters/
-    └── homelab/
-        └── values.yaml             # Homelab overrides
+    ├── dev/
+    │   └── values.yaml             # Dev-specific overrides
+    └── prd/
+        └── values.yaml             # Production-specific overrides
 ```
 
 ## Post-Install Resources
 
-For CRDs that must deploy after an operator (like MetalLB IPAddressPool):
+For CRDs and manifests that must deploy after an operator (like MetalLB IPAddressPool):
 
 ```
-apps/metallb/clusters/homelab/resources/
+apps/metallb/clusters/prd/resources/
 ├── kustomization.yaml
 ├── ip-pool.yaml
 └── l2-advertisement.yaml
@@ -101,17 +93,22 @@ apps/metallb/clusters/homelab/resources/
 
 The resources ApplicationSet deploys these with sync-wave "1".
 
-## Multi-Cluster
+## Environments
 
-1. Register cluster in ArgoCD
-2. Create `apps/<operator>/clusters/<cluster-name>/values.yaml`
-3. ApplicationSet auto-generates Applications for each cluster
+- **dev**: Minikube environment (testing)
+- **prd**: Production environment (homelab deployment)
 
 ## Operators
 
-| Operator | Description |
-|----------|-------------|
-| cert-manager | Certificate management |
-| external-secrets | External secrets management |
-| ingress-nginx | Ingress controller |
-| metallb | Bare metal load balancer |
+| Operator | Description | Environments |
+|----------|-------------|--------------|
+| adguard | DNS ad blocker & local DNS server | prd |
+| cert-manager | Certificate management & Let's Encrypt | dev, prd |
+| external-secrets | External secrets synchronization | dev |
+| ids | Identity server | prd |
+| infisical | Secrets management (disabled) | - |
+| ingress-nginx | HTTP/HTTPS ingress controller | dev, prd |
+| metallb | Bare metal LoadBalancer | dev, prd |
+| minio | S3-compatible object storage | prd |
+| tofu-controller | Terraform OpenTofu operator | prd |
+| wireguard | VPN server (disabled) | dev |

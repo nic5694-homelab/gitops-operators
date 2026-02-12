@@ -49,7 +49,7 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
           - RespectIgnoreDifferences=true
-  templatePatch: |
+  templatePatch: | # Patch allows to add the ignoreDifferences in the config.yaml of each service
     {{ $ignoreDiffs := index . "ignoreDifferences" }}
     {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
     spec:

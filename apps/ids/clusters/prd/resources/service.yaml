@@ -5,6 +5,7 @@ metadata:
   namespace: ids-system
 spec:
   type: LoadBalancer
+  loadBalancerIP: 192.168.0.246
   selector:
     app: ids
   ports:
