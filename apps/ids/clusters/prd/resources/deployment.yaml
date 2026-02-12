@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ids
-          image: nic5694/ids:0.4
+          image: nic5694/ids:0.5
           ports:
             - containerPort: 3000
           resources:
