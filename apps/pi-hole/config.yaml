@@ -1,5 +1,5 @@
 name: pihole
-chart: mojo2600/pihole
-repoURL: https://mojo2600.github.io/pihole-kubernetes/
+chart: my-pihole
+repoURL: https://mojo2600.github.io/pihole-kubernetes/mojo2600/pihole
 version: 2.35.0
 namespace: pi-hole
