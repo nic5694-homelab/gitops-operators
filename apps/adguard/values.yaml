@@ -11,7 +11,7 @@ env:
 service:
   main:
     type: LoadBalancer
-    loadBalancerIP: 192.168.0.241
+    loadBalancerIP: 192.168.0.242
     externalTrafficPolicy: Local
     annotations:
       metallb.universe.tf/allow-shared-ip: adguard-home
@@ -36,7 +36,7 @@ service:
   dns-udp:
     enabled: true
     type: LoadBalancer
-    loadBalancerIP: 192.168.0.241
+    loadBalancerIP: 192.168.0.242
     externalTrafficPolicy: Local
     annotations:
       metallb.universe.tf/allow-shared-ip: adguard-home
@@ -63,7 +63,6 @@ persistence:
     size: 2Gi
 
 # Initial AdGuard Home configuration
-# After first boot, configure via web UI at http://<service-ip>:3000
 config: |
   bind_host: 0.0.0.0
   bind_port: 3000
@@ -134,7 +133,7 @@ config: |
     parental_cache_size: 1048576
     cache_time: 30
     rewrites:
-      - domain: proxmox.lab
+      - domain: proxmox.lab.
         answer: 192.168.0.201
     blocked_services: []
     upstream_timeout: 10s
