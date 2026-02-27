@@ -4,4 +4,4 @@ repoURL: https://mojo2600.github.io/pihole-kubernetes/
 version: 2.35.0
 namespace: pi-hole
 environments:
-  - prd
+  - dev

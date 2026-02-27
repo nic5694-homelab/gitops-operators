@@ -1,5 +1,0 @@
-name: tofu-controller
-chart: flux-iac
-repoURL: https://flux-iac.github.io
-version: 5.4.03
-namespace: tofu-controller
