@@ -18,9 +18,14 @@ spec:
               selector:
                 matchLabels:
                   argocd.argoproj.io/secret-type: cluster
+  selector:
+    matchLabels:
+      deploy-enabled: "true"
   template:
     metadata:
       name: '{{.name}}-{{.nameNormalized}}'
+      labels:
+        deploy-enabled: '{{ if .environments }}{{ has .nameNormalized .environments | toString }}{{ else }}true{{ end }}'
       annotations:
         argocd.argoproj.io/sync-wave: "0"
     spec:
