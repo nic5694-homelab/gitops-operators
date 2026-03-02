@@ -1,0 +1,7 @@
+name: uptime-kuma
+chart: uptime-kuma
+repoURL: https://dirsigler.github.io/uptime-kuma-helm
+version: 4.0.0
+namespace: uptime-kuma
+environments:
+  - dev

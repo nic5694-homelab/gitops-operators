@@ -1,0 +1,7 @@
+name: bunkerweb
+chart: bunkerweb
+repoURL: https://repo.bunkerweb.io/charts
+version: 1.0.0
+namespace: bunkerweb
+environments:
+  - dev
