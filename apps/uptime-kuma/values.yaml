@@ -25,7 +25,7 @@ service:
 
 ingress:
   enabled: true
-  
+
   # className: ""
   extraLabels:
     {}
@@ -47,7 +47,7 @@ ingress:
         proxy_cache_bypass $http_upgrade;
       }
   hosts:
-    - host: chart-example.local
+    - host: uptime-kuma.homelab         # Set your desired hostname
       paths:
         - path: /
           pathType: ImplementationSpecific
