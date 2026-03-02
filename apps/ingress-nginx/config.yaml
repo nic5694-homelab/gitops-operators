@@ -3,9 +3,7 @@ chart: ingress-nginx
 repoURL: https://kubernetes.github.io/ingress-nginx
 version: 4.9.1
 namespace: ingress-nginx
-environments:
-  - dev
-  - prd
+environment: all
 ignoreDifferences:
   # Ignore HPA API version differences (v1 vs v2)
   - group: autoscaling

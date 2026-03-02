@@ -3,5 +3,4 @@ chart: bunkerweb
 repoURL: https://repo.bunkerweb.io/charts
 version: 1.6.8
 namespace: bunkerweb
-environments:
-  - dev
+environment: dev

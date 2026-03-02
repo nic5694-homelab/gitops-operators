@@ -3,7 +3,5 @@ chart: external-secrets
 repoURL: https://charts.external-secrets.io
 version: 0.10.0
 namespace: external-secrets
-environments:
-  - dev
-  - prd
+environment: all
 ignoreDifferences: []

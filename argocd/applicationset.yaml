@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: operators
+  name: operators-dev
   namespace: argocd
 spec:
   goTemplate: true
@@ -18,6 +18,7 @@ spec:
               selector:
                 matchLabels:
                   argocd.argoproj.io/secret-type: cluster
+                  environment: dev
   template:
     metadata:
       name: '{{.name}}-{{.nameNormalized}}'
@@ -49,7 +50,14 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
           - RespectIgnoreDifferences=true
-  templatePatch: | # Patch allows to add the ignoreDifferences in the config.yaml of each service
+  templatePatch: |
+    {{ $appEnv := index . "environment" }}
+    {{/* Skip apps that don't match dev environment (only deploy if environment is "all" or "dev") */}}
+    {{ if and (ne $appEnv "all") (ne $appEnv "dev") }}
+    spec:
+      syncPolicy:
+        automated: null
+    {{else}}
     {{ $ignoreDiffs := index . "ignoreDifferences" }}
     {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
     spec:
@@ -72,4 +80,90 @@ spec:
           {{ end }}
           {{ end }}
       {{ end }}
+    {{ end }}
+    {{ end }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: operators-prd
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=default"]
+  generators:
+    - matrix:
+        generators:
+          - git:
+              repoURL: https://github.com/nic5694-homelab/gitops-operators.git
+              revision: feat/integrate_kuma_waf
+              files:
+                - path: "apps/**/config.yaml"
+          - clusters:
+              selector:
+                matchLabels:
+                  argocd.argoproj.io/secret-type: cluster
+                  environment: prd
+  template:
+    metadata:
+      name: '{{.name}}-{{.nameNormalized}}'
+      annotations:
+        argocd.argoproj.io/sync-wave: "0"
+    spec:
+      project: operators
+      sources:
+        - chart: '{{.chart}}'
+          repoURL: '{{.repoURL}}'
+          targetRevision: '{{.version}}'
+          helm:
+            releaseName: '{{.name}}'
+            valueFiles:
+              - $values/apps/{{.name}}/values.yaml
+              - $values/apps/{{.name}}/clusters/{{.nameNormalized}}/values.yaml
+            ignoreMissingValueFiles: true
+        - repoURL: https://github.com/nic5694-homelab/gitops-operators.git
+          targetRevision: feat/integrate_kuma_waf
+          ref: values
+      destination:
+        server: '{{.server}}'
+        namespace: '{{.namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+          - RespectIgnoreDifferences=true
+  templatePatch: |
+    {{ $appEnv := index . "environment" }}
+    {{/* Skip apps that don't match prd environment (only deploy if environment is "all" or "prd") */}}
+    {{ if and (ne $appEnv "all") (ne $appEnv "prd") }}
+    spec:
+      syncPolicy:
+        automated: null
+    {{else}}
+    {{ $ignoreDiffs := index . "ignoreDifferences" }}
+    {{if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
+    spec:
+      ignoreDifferences:
+      {{ range $ignoreDiffs }}
+        - group: '{{ index . "group" }}'
+          kind: '{{ index . "kind" }}'
+          {{ $jsonPointers := index . "jsonPointers" }}
+          {{ if $jsonPointers }}
+          jsonPointers:
+          {{ range $jsonPointers }}
+            - '{{ . }}'
+          {{ end }}
+          {{ end }}
+          {{ $jqExpressions := index . "jqPathExpressions" }}
+          {{ if $jqExpressions }}
+          jqPathExpressions:
+          {{ range $jqExpressions }}
+            - '{{ . }}'
+          {{ end }}
+          {{ end }}
+      {{ end }}
+    {{ end }}
     {{ end }}

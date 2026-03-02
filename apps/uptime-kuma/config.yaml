@@ -3,5 +3,4 @@ chart: uptime-kuma
 repoURL: https://dirsigler.github.io/uptime-kuma-helm
 version: 3.0.0
 namespace: uptime-kuma
-environments:
-  - dev
+environment: dev
