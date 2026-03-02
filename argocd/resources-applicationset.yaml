@@ -15,7 +15,7 @@ spec:
                   argocd.argoproj.io/secret-type: cluster
           - git:
               repoURL: https://github.com/nic5694-homelab/gitops-operators.git
-              revision: HEAD
+              revision: feat/integrate_kuma_waf
               directories:
                 # Use cluster name from first generator to match environment folder
                 - path: "apps/*/clusters/{{.name}}/resources"
@@ -28,7 +28,7 @@ spec:
       project: operators
       source:
         repoURL: https://github.com/nic5694-homelab/gitops-operators.git
-        targetRevision: HEAD
+        targetRevision: feat/integrate_kuma_waf
         path: '{{.path.path}}'
       destination:
         server: '{{.server}}'

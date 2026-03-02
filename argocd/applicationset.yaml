@@ -11,7 +11,7 @@ spec:
         generators:
           - git:
               repoURL: https://github.com/nic5694-homelab/gitops-operators.git
-              revision: HEAD
+              revision: feat/integrate_kuma_waf
               files:
                 - path: "apps/**/config.yaml"
           - clusters:
@@ -36,7 +36,7 @@ spec:
               - $values/apps/{{.name}}/clusters/{{.nameNormalized}}/values.yaml
             ignoreMissingValueFiles: true
         - repoURL: https://github.com/nic5694-homelab/gitops-operators.git
-          targetRevision: HEAD
+          targetRevision: feat/integrate_kuma_waf
           ref: values
       destination:
         server: '{{.server}}'

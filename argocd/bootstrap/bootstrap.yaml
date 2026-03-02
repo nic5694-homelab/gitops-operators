@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/nic5694-homelab/gitops-operators.git
-    targetRevision: main
+    targetRevision: feat/integrate_kuma_waf
     path: argocd
     directory:
       recurse: true

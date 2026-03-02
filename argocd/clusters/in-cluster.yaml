@@ -10,5 +10,5 @@ metadata:
     managed-by: argocd
 type: Opaque
 stringData:
-  name: prd
+  name: homelab-cluster
   server: https://kubernetes.default.svc

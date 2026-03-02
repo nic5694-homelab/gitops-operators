@@ -110,5 +110,4 @@ The resources ApplicationSet deploys these with sync-wave "1".
 | ingress-nginx | HTTP/HTTPS ingress controller | dev, prd |
 | metallb | Bare metal LoadBalancer | dev, prd |
 | minio | S3-compatible object storage | prd |
-| tofu-controller | Terraform OpenTofu operator | prd |
 | wireguard | VPN server (disabled) | dev |
