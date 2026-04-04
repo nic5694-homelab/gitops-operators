@@ -11,7 +11,7 @@ spec:
   source:
     path: ./helm
     repoURL: https://github.com/nic5694/PaneraBreadWarriors
-    targetRevision: main
+    targetRevision: prd
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
