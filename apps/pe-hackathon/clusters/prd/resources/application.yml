@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     namespace: pe-engineering-hackathon
-    server: kubernetes.default.svc
+    server: https://kubernetes.default.svc
   project: operators
   source:
     path: ./helm
