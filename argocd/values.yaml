@@ -9,7 +9,7 @@ server:
       memory: 64Mi
   ingress:
     enabled: true
-    ingressClassName: traefik
+    ingressClassName: ngninx
     hosts:
       - argocd.homelab
     annotations:
