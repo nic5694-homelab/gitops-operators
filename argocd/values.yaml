@@ -1,6 +1,3 @@
-global:
-  domain: argocd.homelab
-
 server:
   replicas: 2
   resources:
@@ -9,7 +6,7 @@ server:
       memory: 64Mi
   ingress:
     enabled: true
-    ingressClassName: ngninx
+    ingressClassName: nginx
     hosts:
       - argocd.homelab
     annotations:
