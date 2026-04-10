@@ -1,5 +1,5 @@
 global:
-  domain: argocd.local
+  domain: argocd.homelab
 
 server:
   replicas: 2
@@ -9,9 +9,9 @@ server:
       memory: 64Mi
   ingress:
     enabled: true
-    ingressClassName: nginx
+    ingressClassName: traefik
     hosts:
-      - argocd.local
+      - argocd.homelab
     annotations:
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 
