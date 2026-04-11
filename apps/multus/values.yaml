@@ -1,5 +1,16 @@
-# Multus CNI Plugin
-# Chart: https://github.com/startechnica/helm-charts/tree/main/charts/multus
+nameOverride: multus
 
-# Default values follow upstream - no overrides needed for standard deployment
-# The chart will install the multus daemonset and enable NetworkAttachmentDefinition CRD
+image:
+  repository: k8snetworkplumbingwg/multus-cni
+  tag: latest-thick
+  pullPolicy: IfNotPresent
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  automountServiceAccountToken: true
+
+hostCNIBinDir: /opt/cni/bin
+hostCNINetDir: /etc/cni/net.d

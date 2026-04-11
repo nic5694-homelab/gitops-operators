@@ -1,7 +1,7 @@
-name: multus
-chart: multus
+name: multus-cni
+chart: multus-cni
 repoURL: https://startechnica.github.io/apps
-version: 0.1.2
+version: 0.1.4
 namespace: kube-system
 environments:
   - prd
