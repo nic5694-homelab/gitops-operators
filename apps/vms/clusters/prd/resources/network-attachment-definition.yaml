@@ -13,8 +13,5 @@ spec:
       "name": "physical-network",
       "type": "macvlan",
       "master": "eth0",
-      "mode": "bridge",
-      "ipam": {
-        "type": "static"
-      }
+      "mode": "bridge"
     }
