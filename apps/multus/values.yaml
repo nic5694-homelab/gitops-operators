@@ -12,5 +12,5 @@ serviceAccount:
   create: true
   automountServiceAccountToken: true
 
-hostCNIBinDir: /opt/cni/bin
-hostCNINetDir: /etc/cni/net.d
+hostCNIBinDir: /var/lib/rancher/k3s/data/cni
+hostCNINetDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
