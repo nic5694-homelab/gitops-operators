@@ -12,6 +12,7 @@ spec:
   configuration:
     developerConfiguration:
       featureGates: []
+      useEmulation: true
     imagePullPolicy: IfNotPresent
   customizeComponents: {}
   imagePullPolicy: IfNotPresent

@@ -25,7 +25,6 @@ spec:
         argocd.argoproj.io/sync-wave: '{{ if .syncWave }}{{ .syncWave }}{{ else }}0{{ end }}'
     spec:
       project: operators
-      {{- if .chart }}
       sources:
         - chart: '{{.chart}}'
           repoURL: '{{.repoURL}}'
@@ -39,12 +38,6 @@ spec:
         - repoURL: https://github.com/nic5694-homelab/gitops-operators.git
           targetRevision: HEAD
           ref: values
-      {{- else }}
-      source:
-        repoURL: '{{.repoURL}}'
-        targetRevision: HEAD
-        path: '{{.path}}'
-      {{- end }}
       destination:
         server: '{{.server}}'
         namespace: '{{.namespace}}'
@@ -56,10 +49,17 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
           - RespectIgnoreDifferences=true
-  templatePatch: | # Patch allows to add the ignoreDifferences in the config.yaml of each service
+  templatePatch: |
     {{ $ignoreDiffs := index . "ignoreDifferences" }}
-    {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
     spec:
+      {{ if not .chart }}
+      source:
+        repoURL: '{{.repoURL}}'
+        targetRevision: HEAD
+        path: '{{.path}}'
+      sources: null
+      {{ end }}
+      {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
       ignoreDifferences:
       {{ range $ignoreDiffs }}
         - group: '{{ index . "group" }}'
@@ -79,4 +79,4 @@ spec:
           {{ end }}
           {{ end }}
       {{ end }}
-    {{ end }}
+      {{ end }}
