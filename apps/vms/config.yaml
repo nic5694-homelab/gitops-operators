@@ -1,7 +1,7 @@
-name: kubevirt
+name: vm-deployment
 repoURL: https://github.com/nic5694-homelab/gitops-operators.git
 path: apps/vms/clusters/{{.name}}/resources
-namespace: kubevirt
+namespace: homelab-vms
 syncWave: "3"
 environments:
   - prd

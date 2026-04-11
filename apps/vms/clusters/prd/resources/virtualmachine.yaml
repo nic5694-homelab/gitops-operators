@@ -1,8 +1,8 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: testvm-nocloud
-  namespace: kubevirt
+  name: headless-fedora
+  namespace: homelab-vms
   annotations:
     argocd.argoproj.io/sync-options: "SkipDryRunOnMissingResource=true"
     argocd.argoproj.io/sync-wave: "7"
@@ -11,25 +11,23 @@ spec:
   template:
     metadata:
       labels:
-        kubevirt.io/domain: testvm-nocloud
+        kubevirt.io/domain: headless-fedora
     spec:
       terminationGracePeriodSeconds: 30
       domain:
+        cpu:
+          cores: 2
         resources:
           requests:
-            memory: 1024M
+            memory: 2Gi
         devices:
           interfaces:
           - name: default
             masquerade: {}
           - name: physical-nic
-            bridge:
-              name: physical-network
+            bridge: {}
           disks:
-          - name: containerdisk
-            disk:
-              bus: virtio
-          - name: emptydisk
+          - name: rootdisk
             disk:
               bus: virtio
           - disk:
@@ -42,26 +40,32 @@ spec:
         multus:
           networkName: kubevirt/physical-network
       volumes:
-      - name: containerdisk
+      - name: rootdisk
         containerDisk:
-          image: kubevirt/fedora-cloud-container-disk-demo:latest
-      - name: emptydisk
-        emptyDisk:
-          capacity: "2Gi"
+          # Swap to quay.io/containerdisks/ubuntu:22.04 for Ubuntu.
+          image: quay.io/containerdisks/fedora:40
       - name: cloudinitdisk
         cloudInitNoCloud:
           userData: |-
             #cloud-config
-            password: fedora
-            chpasswd: { expire: False }
-            network-config:
-              version: 2
-              ethernets:
-                eth1:
-                  dhcp4: false
+            users:
+              - name: cloud-user
+                lock_passwd: false
+                sudo: ALL=(ALL) NOPASSWD:ALL
+            chpasswd:
+              expire: false
+              list: |
+                cloud-user:dummy1234
+            ssh_pwauth: true
+            disable_root: false
+          networkData: |-
+            version: 2
+            ethernets:
+              eth1:
+                dhcp4: false
+                addresses:
+                  - 192.168.0.210/24
+                gateway4: 192.168.0.1
+                nameservers:
                   addresses:
-                    - 192.168.0.210/24
-                  gateway4: 192.168.0.1
-                  nameservers:
-                    addresses:
-                      - 192.168.0.242
+                    - 192.168.0.242
