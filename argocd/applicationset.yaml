@@ -22,7 +22,7 @@ spec:
     metadata:
       name: '{{.name}}-{{.nameNormalized}}'
       annotations:
-        argocd.argoproj.io/sync-wave: '{{ if .syncWave }}{{ .syncWave }}{{ else }}0{{ end }}'
+        argocd.argoproj.io/sync-wave: "0"
     spec:
       project: operators
       sources:
@@ -49,17 +49,10 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
           - RespectIgnoreDifferences=true
-  templatePatch: |
+  templatePatch: | # Patch allows to add the ignoreDifferences in the config.yaml of each service
     {{ $ignoreDiffs := index . "ignoreDifferences" }}
+    {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
     spec:
-      {{ if not .chart }}
-      source:
-        repoURL: '{{.repoURL}}'
-        targetRevision: HEAD
-        path: '{{.path}}'
-      sources: null
-      {{ end }}
-      {{ if and $ignoreDiffs (gt (len $ignoreDiffs) 0) }}
       ignoreDifferences:
       {{ range $ignoreDiffs }}
         - group: '{{ index . "group" }}'
@@ -79,4 +72,4 @@ spec:
           {{ end }}
           {{ end }}
       {{ end }}
-      {{ end }}
+    {{ end }}
