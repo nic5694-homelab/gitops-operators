@@ -1,0 +1,19 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: physical-network
+  annotations:
+    argocd.argoproj.io/sync-wave: "6" 
+  namespace: kubevirt
+spec:
+  config: |
+    {
+      "cniVersion": "0.4.0",
+      "name": "physical-network",
+      "type": "macvlan",
+      "master": "eth0",
+      "mode": "bridge",
+      "ipam": {
+        "type": "static"
+      }
+    }
