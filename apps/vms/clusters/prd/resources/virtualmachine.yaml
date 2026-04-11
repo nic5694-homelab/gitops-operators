@@ -38,7 +38,7 @@ spec:
         pod: {}
       - name: physical-nic
         multus:
-          networkName: kubevirt/physical-network
+          networkName: homelab-vms/physical-network
       volumes:
       - name: rootdisk
         containerDisk:
