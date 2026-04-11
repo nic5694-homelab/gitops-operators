@@ -3,5 +3,6 @@ chart: multus-cni
 repoURL: https://startechnica.github.io/apps
 version: 0.1.4
 namespace: kube-system
+syncWave: "1"
 environments:
   - prd

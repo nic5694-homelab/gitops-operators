@@ -22,9 +22,10 @@ spec:
     metadata:
       name: '{{.name}}-{{.nameNormalized}}'
       annotations:
-        argocd.argoproj.io/sync-wave: "0"
+        argocd.argoproj.io/sync-wave: '{{ if .syncWave }}{{ .syncWave }}{{ else }}0{{ end }}'
     spec:
       project: operators
+      {{- if .chart }}
       sources:
         - chart: '{{.chart}}'
           repoURL: '{{.repoURL}}'
@@ -38,6 +39,12 @@ spec:
         - repoURL: https://github.com/nic5694-homelab/gitops-operators.git
           targetRevision: HEAD
           ref: values
+      {{- else }}
+      source:
+        repoURL: '{{.repoURL}}'
+        targetRevision: HEAD
+        path: '{{.path}}'
+      {{- end }}
       destination:
         server: '{{.server}}'
         namespace: '{{.namespace}}'
