@@ -14,3 +14,15 @@ serviceAccount:
 
 hostCNIBinDir: /var/lib/rancher/k3s/data/cni
 hostCNINetDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
+
+daemonConfig: |-
+  {
+    "chrootDir": "/hostroot",
+    "cniVersion": "0.3.1",
+    "logLevel": "debug",
+    "logToStderr": true,
+    "metricsPort": 17020,
+    "multusAutoconfigDir": "/host/var/lib/rancher/k3s/agent/etc/cni/net.d",
+    "multusConfigFile": "auto",
+    "socketDir": "/host/run/multus/"
+  }
