@@ -1,7 +1,0 @@
-name: kubevirt
-repoURL: https://github.com/nic5694-homelab/gitops-operators.git
-path: apps/kubevirt/clusters/{{.name}}/resources
-namespace: kubevirt
-syncWave: "1"
-environments:
-  - prd
