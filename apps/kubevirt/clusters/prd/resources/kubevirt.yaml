@@ -5,7 +5,7 @@ metadata:
   name: kubevirt
   namespace: kubevirt
   annotations:
-    argocd.argoproj.io/sync-options: "CreateNamespace=true"
+    argocd.argoproj.io/sync-options: "CreateNamespace=true,SkipDryRunOnMissingResource=true"
     argocd.argoproj.io/sync-wave: "5" # ensure operator is installed before applying CRD 
 spec:
   certificateRotateStrategy: {}
