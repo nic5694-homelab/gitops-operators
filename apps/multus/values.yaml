@@ -1,0 +1,5 @@
+# Multus CNI Plugin
+# Chart: https://github.com/startechnica/helm-charts/tree/main/charts/multus
+
+# Default values follow upstream - no overrides needed for standard deployment
+# The chart will install the multus daemonset and enable NetworkAttachmentDefinition CRD
