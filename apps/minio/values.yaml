@@ -178,7 +178,7 @@ service:
   clusterIP: ~
   port: "9000"
   nodePort: 32000
-  loadBalancerIP: 10.0.0.11
+  loadBalancerIP: 10.0.0.15
   externalIPs: []
   annotations: {}
 
@@ -223,7 +223,7 @@ consoleService:
   clusterIP: ~
   port: "9001"
   nodePort: 32001
-  loadBalancerIP: 192.168.0.244
+  loadBalancerIP: 10.0.0.15
   externalIPs: []
   annotations: {}
   ## consoleService.loadBalancerSourceRanges Addresses that are allowed when service is LoadBalancer
