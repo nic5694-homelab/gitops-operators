@@ -1,28 +1,28 @@
-nameOverride: multus
+# nameOverride: multus
 
-image:
-  repository: k8snetworkplumbingwg/multus-cni
-  tag: latest-thick
-  pullPolicy: IfNotPresent
+# image:
+#   repository: k8snetworkplumbingwg/multus-cni
+#   tag: latest-thick
+#   pullPolicy: IfNotPresent
 
-rbac:
-  create: true
+# rbac:
+#   create: true
 
-serviceAccount:
-  create: true
-  automountServiceAccountToken: true
+# serviceAccount:
+#   create: true
+#   automountServiceAccountToken: true
 
-hostCNIBinDir: /var/lib/rancher/k3s/data/cni
-hostCNINetDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
+# hostCNIBinDir: /var/lib/rancher/k3s/data/cni
+# hostCNINetDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
 
-daemonConfig: |-
-  {
-    "chrootDir": "/hostroot",
-    "cniVersion": "0.3.1",
-    "logLevel": "debug",
-    "logToStderr": true,
-    "metricsPort": 17020,
-    "multusAutoconfigDir": "/host/var/lib/rancher/k3s/agent/etc/cni/net.d",
-    "multusConfigFile": "auto",
-    "socketDir": "/host/run/multus/"
-  }
+# daemonConfig: |-
+#   {
+#     "chrootDir": "/hostroot",
+#     "cniVersion": "0.3.1",
+#     "logLevel": "debug",
+#     "logToStderr": true,
+#     "metricsPort": 17020,
+#     "multusAutoconfigDir": "/host/var/lib/rancher/k3s/agent/etc/cni/net.d",
+#     "multusConfigFile": "auto",
+#     "socketDir": "/host/run/multus/"
+#   }
