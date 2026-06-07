@@ -1,3 +1,5 @@
+gfd:
+  enabled: true
 affinity: {}
 nodeSelector:
   feature.node.kubernetes.io/pci-0300_10de.present: "true"
