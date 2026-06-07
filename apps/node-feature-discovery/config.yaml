@@ -1,7 +1,0 @@
-name: node-feature-discovery
-chart: node-feature-discovery
-repoURL: https://kubernetes-sigs.github.io/node-feature-discovery/charts
-version: 0.18.3
-namespace: kube-system
-environments:
-  - prd
