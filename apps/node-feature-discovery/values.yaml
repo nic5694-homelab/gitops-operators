@@ -1,0 +1,4 @@
+# Inside your nvidia-device-plugin values.yaml
+gfd:
+  enabled: true
+
