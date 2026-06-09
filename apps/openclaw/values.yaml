@@ -7,11 +7,14 @@ app-template:
     - gog
 
   defaultPodOptions:
+    nodeSelector:
+      nvidia.com/gpu.product: "NVIDIA-GeForce-GTX-1660-SUPER"
+    runtimeClassName: nvidia
     securityContext:
       fsGroup: 1000
       fsGroupChangePolicy: OnRootMismatch
-    nodeSelector:
-      nvidia.com/gpu: "true"
+      seccompProfile:
+        type: RuntimeDefault
 
   controllers:
     main:
