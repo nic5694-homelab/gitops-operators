@@ -164,7 +164,7 @@ app-template:
       type: persistentVolumeClaim
       accessMode: ReadWriteOnce
       size: 5Gi
-      storageClass: "local-provisioner"
+      storageClass: "local-path"
       advancedMounts:
         main:
           init-config:
