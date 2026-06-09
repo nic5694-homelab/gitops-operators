@@ -16,6 +16,8 @@ service:
     annotations:
       # MetalLB allows these three Services to share the same external IP.
       metallb.universe.tf/allow-shared-ip: adguard
+      metallb.universe.tf/address-pool: default-pool
+      metallb.universe.tf/loadBalancerIPs: 10.0.0.14
     ports:
       http:
         port: 3000
@@ -28,6 +30,8 @@ service:
     annotations:
       # MetalLB allows these three Services to share the same external IP.
       metallb.universe.tf/allow-shared-ip: adguard
+      metallb.universe.tf/address-pool: default-pool
+      metallb.universe.tf/loadBalancerIPs: 10.0.0.14
     ports:
       dns-tcp:
         enabled: true
@@ -42,6 +46,8 @@ service:
     externalTrafficPolicy: Local
     annotations:
       # MetalLB allows these three Services to share the same external IP.
+      metallb.universe.tf/address-pool: default-pool
+      metallb.universe.tf/loadBalancerIPs: 10.0.0.14
       metallb.universe.tf/allow-shared-ip: adguard
     ports:
       dns-udp:

@@ -5,4 +5,7 @@ controller:
       cpu: 100m
       memory: 90Mi
   service:
-    loadBalancerIP: 10.0.0.10
+    annotations:
+      metallb.universe.tf/address-pool: default-pool
+      metallb.universe.tf/loadBalancerIPs: 10.0.0.11
+    loadBalancerIP: 10.0.0.11
