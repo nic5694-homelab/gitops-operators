@@ -155,7 +155,7 @@ config: |
     cache_time: 30
     rewrites:
       - domain: *.homelab 
-        answer: 192.168.0.243
+        answer: 10.0.0.11
     blocked_services: []
     upstream_timeout: 10s
     private_networks: []
