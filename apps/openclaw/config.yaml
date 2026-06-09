@@ -1,7 +1,7 @@
 name: openclaw
 chart: openclaw
 repoURL: https://serhanekicii.github.io/openclaw-helm
-version: 1,5,40
+version: 1.5.40
 namespace: openclaw-sandbox
 environments:
   - prd
