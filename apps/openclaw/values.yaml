@@ -1,78 +1,186 @@
-openclaw:
-  configMode: "merge"           
-  gatewayPort: 18789
+app-template:
+  openclawVersion: "2026.5.22"
+  chromiumVersion: "148.0.7778.97"
+  configMode: merge
+  skills:
+    - weather
+    - gog
 
-  env:
-    - name: LLM_API_BASE
-      value: "http://cluster.local"
-    - name: LLM_MODEL_NAME
-      value: "meta-llama/Llama-2-7b-hf"
-    - name: BROWSER_ARGS
-      value: "--no-sandbox --disable-gpu-sandbox --disable-dev-shm-usage --disable-cpu-throttling"
+  defaultPodOptions:
+    securityContext:
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+    nodeSelector:
+      nvidia.com/gpu: "true"
 
-ingress:
-  main:
-    enabled: true
-    ingressClassName: "nginx" 
-    
-    annotations:
-      kubernetes.io/ingress.class: "nginx"
-      nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
-      nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-      nginx.ingress.kubernetes.io/proxy-read-timeout: "600" 
+  controllers:
+    main:
+      replicas: 1
+      strategy: Recreate
 
-    hosts:
-      - host: "openclaw.homelab"  
-        paths:
-          - path: /
-            pathType: Prefix
-            service:
-              port: 18789                   
+      containers:
+        main:
+          image:
+            repository: ghcr.io/openclaw/openclaw
+            tag: "{{ .Values.openclawVersion }}"
+            pullPolicy: IfNotPresent
 
-resources:
-  limits:
-    cpu: "2"
-    memory: "4Gi"
-    nvidia.com/gpu: 1
-  requests:
-    cpu: "1"
-    memory: "2Gi"
-    nvidia.com/gpu: 1
+          env:
+            LLM_API_BASE: "http://cluster.local"
+            LLM_MODEL_NAME: "meta-llama/Llama-2-7b-hf"
 
-extraVolumes:
-  - name: dshm
-    emptyDir:
-      medium: Memory
-      sizeLimit: 2Gi
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
 
-extraVolumeMounts:
-  - name: dshm
-    mountPath: /dev/shm
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 2Gi
 
-persistence:
-  enabled: true
-  storageClass: "local-provisioner"      
-  accessMode: ReadWriteOnce
-  size: 10Gi
-  mountPath: /data
+        chromium:
+          enabled: true
+          image:
+            repository: chromedp/headless-shell
+            tag: "{{ .Values.chromiumVersion }}"
 
-securityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
-  runAsGroup: 1000
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false
-  capabilities:
-    drop:
-      - ALL
-    add:
-      - SYS_RESOURCE
-      - SYS_PTRACE
 
-podSecurityContext:
-  fsGroup: 1000
-  seccompProfile:
-    type: RuntimeDefault
+          command:
+            - /headless-shell/headless-shell
+          args:
+            - "--no-sandbox"
+            - "--disable-gpu-sandbox"
+            - "--disable-dev-shm-usage"
+            - "--disable-cpu-throttling"
+            - "--use-gl=angle"
+            - "--use-angle=swiftshader"
+            - "--remote-debugging-address=0.0.0.0"
+            - "--remote-debugging-port=9223"
 
-nodeSelector:
-  nvidia.com/gpu: "true"
+          env:
+            XDG_CACHE_HOME: /tmp
+
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - SYS_RESOURCE
+                - SYS_PTRACE
+
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+              nvidia.com/gpu: 1
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+              nvidia.com/gpu: 1
+
+  # Service configuration
+  service:
+    main:
+      controller: main
+      ipFamilyPolicy: SingleStack
+      ipFamilies:
+        - IPv4
+      ports:
+        http:
+          port: 18789
+
+  ingress:
+    main:
+      enabled: true
+      className: nginx
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+        nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+      hosts:
+        - host: "openclaw.homelab"
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                identifier: main
+                port: http
+
+  persistence:
+    scripts:
+      enabled: true
+      type: configMap
+      identifier: scripts
+      advancedMounts:
+        main:
+          init-config:
+            - path: /scripts
+              readOnly: true
+          init-skills:
+            - path: /scripts
+              readOnly: true
+
+    config:
+      enabled: true
+      type: configMap
+      identifier: config
+      advancedMounts:
+        main:
+          init-config:
+            - path: /config
+              readOnly: true
+
+    bash-aliases:
+      enabled: true
+      type: configMap
+      identifier: config
+      advancedMounts:
+        main:
+          main:
+            - path: /home/node/.bash_aliases
+              subPath: bash_aliases
+              readOnly: true
+
+    data:
+      enabled: true
+      type: persistentVolumeClaim
+      accessMode: ReadWriteOnce
+      size: 5Gi
+      storageClass: "local-provisioner"
+      advancedMounts:
+        main:
+          init-config:
+            - path: /home/node/.openclaw
+          init-skills:
+            - path: /home/node/.openclaw
+          main:
+            - path: /home/node/.openclaw
+
+    tmp:
+      enabled: true
+      type: emptyDir
+      advancedMounts:
+        main:
+          init-config:
+            - path: /tmp
+          init-skills:
+            - path: /tmp
+          main:
+            - path: /tmp
+          chromium:
+            - path: /tmp
