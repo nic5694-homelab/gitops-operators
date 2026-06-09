@@ -178,7 +178,6 @@ service:
   clusterIP: ~
   port: "9000"
   nodePort: 32000
-  loadBalancerIP: 10.0.0.13
   externalIPs: []
   annotations:
     metallb.universe.tf/address-pool: default-pool

@@ -11,7 +11,6 @@ env:
 service:
   main:
     type: LoadBalancer
-    loadBalancerIP: 10.0.0.14
     externalTrafficPolicy: Local
     annotations:
       # MetalLB allows these three Services to share the same external IP.
@@ -25,7 +24,6 @@ service:
   dns-tcp:
     enabled: true
     type: LoadBalancer
-    loadBalancerIP: 10.0.0.14
     externalTrafficPolicy: Local
     annotations:
       # MetalLB allows these three Services to share the same external IP.
@@ -42,7 +40,6 @@ service:
   dns-udp:
     enabled: true
     type: LoadBalancer
-    loadBalancerIP: 10.0.0.14
     externalTrafficPolicy: Local
     annotations:
       # MetalLB allows these three Services to share the same external IP.
