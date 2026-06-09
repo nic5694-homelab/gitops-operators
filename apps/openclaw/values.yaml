@@ -7,6 +7,8 @@ openclaw:
       value: "http://cluster.local"
     - name: LLM_MODEL_NAME
       value: "meta-llama/Llama-2-7b-hf"
+    - name: BROWSER_ARGS
+      value: "--no-sandbox --disable-dev-shm-usage --disable-cpu-throttling"
 
 ingress:
   main:
@@ -31,9 +33,11 @@ resources:
   limits:
     cpu: "2"
     memory: "4Gi"
+    nvidia.com/gpu: 1
   requests:
     cpu: "1"
     memory: "2Gi"
+    nvidia.com/gpu: 1
 
 extraVolumes:
   - name: dshm
@@ -51,3 +55,21 @@ persistence:
   accessMode: ReadWriteOnce
   size: 10Gi
   mountPath: /data
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+podSecurityContext:
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+nodeSelector:
+  nvidia.com/gpu: "true"
