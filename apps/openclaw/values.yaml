@@ -1,0 +1,53 @@
+openclaw:
+  configMode: "merge"           
+  gatewayPort: 18789
+
+  env:
+    - name: LLM_API_BASE
+      value: "http://cluster.local"
+    - name: LLM_MODEL_NAME
+      value: "meta-llama/Llama-2-7b-hf"
+
+ingress:
+  main:
+    enabled: true
+    ingressClassName: "nginx" 
+    
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "600" 
+
+    hosts:
+      - host: "openclaw.homelab"  
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              port: 18789                   
+
+resources:
+  limits:
+    cpu: "2"
+    memory: "4Gi"
+  requests:
+    cpu: "1"
+    memory: "2Gi"
+
+extraVolumes:
+  - name: dshm
+    emptyDir:
+      medium: Memory
+      sizeLimit: 2Gi
+
+extraVolumeMounts:
+  - name: dshm
+    mountPath: /dev/shm
+
+persistence:
+  enabled: true
+  storageClass: "local-provisioner"      
+  accessMode: ReadWriteOnce
+  size: 10Gi
+  mountPath: /data
