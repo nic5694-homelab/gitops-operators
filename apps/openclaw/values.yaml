@@ -55,11 +55,11 @@ app-template:
             - "awq"
             
             - "--tensor-parallel-size"
-            - "3"
+            - "2"
             
             - "--gpu-memory-utilization"
             - "0.85"
-            
+
             - "--max-model-len"
             - "8192"
             - "--enforce-eager"
@@ -74,11 +74,12 @@ app-template:
                   
           resources:
             requests:
-              nvidia.com/gpu: 3
+              # Request exactly 2 GPUs to match your Tensor Parallel size
+              nvidia.com/gpu: 2
               memory: 3Gi
               cpu: 1000m
             limits:
-              nvidia.com/gpu: 3
+              nvidia.com/gpu: 2
               memory: 7.5Gi
               cpu: 4000m
 
