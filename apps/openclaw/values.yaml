@@ -31,6 +31,7 @@ app-template:
           env:
             LLM_API_BASE: "http://cluster.local"
             LLM_MODEL_NAME: "meta-llama/Llama-2-7b-hf"
+            OPENCLAW_GATEWAY_TOKEN: '{{ randAlphaNum 32 }}'
 
           securityContext:
             runAsUser: 1000
