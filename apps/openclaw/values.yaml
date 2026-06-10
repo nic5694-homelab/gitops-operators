@@ -5,10 +5,10 @@ app-template:
     nodeSelector:
       nvidia.com/gpu.product: "NVIDIA-GeForce-GTX-1660-SUPER"
     tolerations:
-          - key: "dedicated"
-            operator: "Equal"
-            value: "vllm"
-            effect: "NoSchedule"
+      - key: "dedicated"
+        operator: "Equal"
+        value: "vllm"
+        effect: "NoSchedule"
     runtimeClassName: nvidia
     securityContext:
       seccompProfile:
@@ -36,9 +36,12 @@ app-template:
                 secretKeyRef:
                   name: openclaw-auth
                   key: token
+
+            OPENCLAW_GATEWAY_BIND: "0.0.0.0"
                   
             OPENCLAW_GATEWAY_CONTROLUI_ALLOWEDORIGINS: '["http://openclaw.homelab", "https://openclaw.homelab", "http://localhost:18789", "http://127.0.0.1:18789"]'
             OPENCLAW_GATEWAY_CONTROLUI_ALLOWINSECUREAUTH: "true"
+            OPENCLAW_GATEWAY_CONTROLUI_DANGEROUSLYALLOWHOSTHEADERORIGINFALLBACK: "true"
 
     vllm-pool:
       replicas: 1
@@ -58,18 +61,15 @@ app-template:
             - "casperhansen/llama-3-8b-instruct-awq"
             - "--quantization"
             - "awq"
-            
             - "--tensor-parallel-size"
             - "2"
-            
             - "--gpu-memory-utilization"
             - "0.85"
-
             - "--max-model-len"
             - "8192"
             - "--enforce-eager"
             - "--swap-space"
-            - "0" # Disable swap to save RAM until we can swap memory around
+            - "0" 
           env:
             HUGGING_FACE_HUB_TOKEN: "your_hf_token_here" 
             
@@ -81,7 +81,6 @@ app-template:
                   
           resources:
             requests:
-              # Request exactly 2 GPUs to match your Tensor Parallel size
               nvidia.com/gpu: 2
               memory: 4Gi
               cpu: 1000m
