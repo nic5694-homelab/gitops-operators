@@ -1,34 +1,20 @@
 app-template:
-  openclawVersion: "2026.5.22"
-  chromiumVersion: "148.0.7778.97"
-  configMode: merge
-  skills:
-    - weather
-    - gog
-
   defaultPodOptions:
     nodeSelector:
       nvidia.com/gpu.product: "NVIDIA-GeForce-GTX-1660-SUPER"
     runtimeClassName: nvidia
     securityContext:
-      fsGroup: 1000
-      fsGroupChangePolicy: OnRootMismatch
       seccompProfile:
         type: RuntimeDefault
 
   controllers:
     main:
-      replicas: 1
-      strategy: Recreate
-
       containers:
         main:
-          image:
-            repository: ghcr.io/openclaw/openclaw
-            tag: "{{ .Values.openclawVersion }}"
-            pullPolicy: IfNotPresent
-
           env:
+            OPENCLAW_OPENAI_API_BASE: "http://openclaw-vllm-pool.openclaw-sandbox.svc.cluster.local:8000/v1"
+            OPENCLAW_DEFAULT_MODEL: "openai/casperhansen/llama-3-8b-instruct-awq"
+            OPENCLAW_OPENAI_API_KEY: "your-local-cluster-token"
             LLM_API_BASE: "http://cluster.local"
             LLM_MODEL_NAME: "meta-llama/Llama-2-7b-hf"
             OPENCLAW_GATEWAY_TOKEN:
@@ -36,80 +22,46 @@ app-template:
                 secretKeyRef:
                   name: openclaw-auth
                   key: token
+            OPENCLAW_GATEWAY_CONTROLUI_ALLOWEDORIGINS: '["http://openclaw.homelab"]'
 
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: true
-            readOnlyRootFilesystem: true
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-
-          resources:
-            requests:
-              cpu: 200m
-              memory: 512Mi
-            limits:
-              cpu: 2000m
-              memory: 2Gi
-
-        chromium:
-          enabled: true
+    vllm-pool:
+      replicas: 3
+      strategy: RollingUpdate
+      containers:
+        main:
           image:
-            repository: chromedp/headless-shell
-            tag: "{{ .Values.chromiumVersion }}"
-
-
+            repository: vllm/vllm-openai
+            tag: "v0.6.4"
+            pullPolicy: IfNotPresent
           command:
-            - /headless-shell/headless-shell
+            - python3
+            - "-m"
+            - vllm.entrypoints.openai.api_server
           args:
-            - "--no-sandbox"
-            - "--disable-gpu-sandbox"
-            - "--disable-dev-shm-usage"
-            - "--disable-cpu-throttling"
-            - "--use-gl=angle"
-            - "--use-angle=swiftshader"
-            - "--remote-debugging-address=0.0.0.0"
-            - "--remote-debugging-port=9223"
-
+            - "--model"
+            - "casperhansen/llama-3-8b-instruct-awq"
+            - "--quantization"
+            - "awq"
+            - "--gpu-memory-utilization"
+            - "0.85"
+            - "--max-model-len"
+            - "2048"
+            - "--enforce-eager"
           env:
-            XDG_CACHE_HOME: /tmp
-
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: true
-            readOnlyRootFilesystem: true
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-              add:
-                - SYS_RESOURCE
-                - SYS_PTRACE
-
+            HUGGING_FACE_HUB_TOKEN: "your_hf_token_here"
+            VLLM_API_KEY: "your-local-cluster-token"
           resources:
             requests:
-              cpu: 500m
-              memory: 512Mi
               nvidia.com/gpu: 1
             limits:
-              cpu: 1000m
-              memory: 1Gi
               nvidia.com/gpu: 1
 
-  # Service configuration
   service:
-    main:
-      controller: main
-      ipFamilyPolicy: SingleStack
-      ipFamilies:
-        - IPv4
+    vllm-pool:
+      controller: vllm-pool
       ports:
         http:
-          port: 18789
+          port: 8000
 
   ingress:
     main:
@@ -130,65 +82,16 @@ app-template:
                 port: http
 
   persistence:
-    scripts:
-      enabled: true
-      type: configMap
-      identifier: scripts
-      advancedMounts:
-        main:
-          init-config:
-            - path: /scripts
-              readOnly: true
-          init-skills:
-            - path: /scripts
-              readOnly: true
-
-    config:
-      enabled: true
-      type: configMap
-      identifier: config
-      advancedMounts:
-        main:
-          init-config:
-            - path: /config
-              readOnly: true
-
-    bash-aliases:
-      enabled: true
-      type: configMap
-      identifier: config
-      advancedMounts:
-        main:
-          main:
-            - path: /home/node/.bash_aliases
-              subPath: bash_aliases
-              readOnly: true
-
     data:
+      storageClass: "local-path"
+      
+    vllm-cache:
       enabled: true
       type: persistentVolumeClaim
       accessMode: ReadWriteOnce
-      size: 5Gi
+      size: 40Gi
       storageClass: "local-path"
       advancedMounts:
-        main:
-          init-config:
-            - path: /home/node/.openclaw
-          init-skills:
-            - path: /home/node/.openclaw
+        vllm-pool:
           main:
-            - path: /home/node/.openclaw
-
-    tmp:
-      enabled: true
-      type: emptyDir
-      advancedMounts:
-        main:
-          init-config:
-            - path: /tmp
-          init-skills:
-            - path: /tmp
-          main:
-            - path: /tmp
-          chromium:
-            - path: /tmp
+            - path: /root/.cache/huggingface
