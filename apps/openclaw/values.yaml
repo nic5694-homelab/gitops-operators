@@ -1,4 +1,6 @@
 app-template:
+  configMode: overwrite
+
   defaultPodOptions:
     nodeSelector:
       nvidia.com/gpu.product: "NVIDIA-GeForce-GTX-1660-SUPER"
@@ -14,19 +16,28 @@ app-template:
           env:
             OPENCLAW_OPENAI_API_BASE: "http://openclaw-vllm-pool.openclaw-sandbox.svc.cluster.local:8000/v1"
             OPENCLAW_DEFAULT_MODEL: "openai/casperhansen/llama-3-8b-instruct-awq"
-            OPENCLAW_OPENAI_API_KEY: "your-local-cluster-token"
+            
+            OPENCLAW_OPENAI_API_KEY:
+              valueFrom:
+                secretKeyRef:
+                  name: openclaw-auth
+                  key: token
+            
             LLM_API_BASE: "http://cluster.local"
             LLM_MODEL_NAME: "meta-llama/Llama-2-7b-hf"
+            
             OPENCLAW_GATEWAY_TOKEN:
               valueFrom:
                 secretKeyRef:
                   name: openclaw-auth
                   key: token
-            OPENCLAW_GATEWAY_CONTROLUI_ALLOWEDORIGINS: '["http://openclaw.homelab"]'
+                  
+            OPENCLAW_GATEWAY_CONTROLUI_ALLOWEDORIGINS: '["http://openclaw.homelab", "https://openclaw.homelab", "http://localhost:18789", "http://127.0.0.1:18789"]'
+            OPENCLAW_GATEWAY_CONTROLUI_ALLOWINSECUREAUTH: "true"
 
     vllm-pool:
-      replicas: 3
-      strategy: RollingUpdate
+      replicas: 1
+      strategy: Recreate
       containers:
         main:
           image:
@@ -42,19 +53,34 @@ app-template:
             - "casperhansen/llama-3-8b-instruct-awq"
             - "--quantization"
             - "awq"
+            
+            - "--tensor-parallel-size"
+            - "3"
+            
             - "--gpu-memory-utilization"
             - "0.85"
+            
             - "--max-model-len"
-            - "2048"
+            - "8192"
             - "--enforce-eager"
           env:
-            HUGGING_FACE_HUB_TOKEN: "your_hf_token_here"
-            VLLM_API_KEY: "your-local-cluster-token"
+            HUGGING_FACE_HUB_TOKEN: "your_hf_token_here" 
+            
+            VLLM_API_KEY:
+              valueFrom:
+                secretKeyRef:
+                  name: openclaw-auth
+                  key: token
+                  
           resources:
             requests:
-              nvidia.com/gpu: 1
+              nvidia.com/gpu: 3
+              memory: 3Gi
+              cpu: 1000m
             limits:
-              nvidia.com/gpu: 1
+              nvidia.com/gpu: 3
+              memory: 7.5Gi
+              cpu: 4000m
 
   service:
     vllm-pool:
@@ -62,24 +88,6 @@ app-template:
       ports:
         http:
           port: 8000
-  configMaps:
-    config:
-      enabled: true
-      data:
-        openclaw.json: |
-          {
-            "gateway": {
-              "controlUi": {
-                "allowInsecureAuthg": true,
-                "allowedOrigins": [
-                  "http://openclaw.homelab",
-                  "https://openclaw.homelab",
-                  "http://localhost:18789",
-                  "http://127.0.0.1:18789"
-                ]
-              }
-            }
-          }
 
   ingress:
     main:
