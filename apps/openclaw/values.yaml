@@ -70,6 +70,7 @@ app-template:
           {
             "gateway": {
               "controlUi": {
+                "allowInsecureAuthg": true,
                 "allowedOrigins": [
                   "http://openclaw.homelab",
                   "https://openclaw.homelab",
