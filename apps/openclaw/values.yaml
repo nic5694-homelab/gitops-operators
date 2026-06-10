@@ -63,6 +63,8 @@ app-template:
             - "--max-model-len"
             - "8192"
             - "--enforce-eager"
+            - "--swap-space"
+            - "0" # Disable swap to save RAM until we can swap memory around
           env:
             HUGGING_FACE_HUB_TOKEN: "your_hf_token_here" 
             
@@ -76,11 +78,11 @@ app-template:
             requests:
               # Request exactly 2 GPUs to match your Tensor Parallel size
               nvidia.com/gpu: 2
-              memory: 3Gi
+              memory: 6Gi
               cpu: 1000m
             limits:
               nvidia.com/gpu: 2
-              memory: 7.5Gi
+              memory: 6.5Gi
               cpu: 4000m
 
   service:
