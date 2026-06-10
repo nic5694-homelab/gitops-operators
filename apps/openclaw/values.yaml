@@ -128,3 +128,12 @@ app-template:
         vllm-pool:
           main:
             - path: /root/.cache/huggingface
+    shm:
+      enabled: true
+      type: emptyDir
+      medium: Memory
+      sizeLimit: 1Gi 
+      advancedMounts:
+        vllm-pool:
+          main:
+            - path: /dev/shm
