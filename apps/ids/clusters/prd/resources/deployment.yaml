@@ -20,7 +20,7 @@ spec:
           image: nic5694/ids:0.10
           env:
             - name: S3_ENDPOINT
-              value: "https://s3.marketplaceking.ca"
+              value: "https://s3.benmusicgeek.synology.me"
           ports:
             - containerPort: 3000
           resources:
