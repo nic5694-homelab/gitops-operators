@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ids
-          image: nic5694/ids:0.10\
+          image: nic5694/ids:0.10
           env:
             - name: S3_ENDPOINT
               value: "https://s3.marketplaceking.ca"
