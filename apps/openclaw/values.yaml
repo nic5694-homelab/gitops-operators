@@ -1,139 +1,139 @@
-app-template:
-  configMode: overwrite
+# app-template:
+#   configMode: overwrite
 
-  defaultPodOptions:
-    nodeSelector:
-      nvidia.com/gpu.product: "NVIDIA-GeForce-GTX-1660-SUPER"
-    tolerations:
-      - key: "dedicated"
-        operator: "Equal"
-        value: "vllm"
-        effect: "NoSchedule"
-    runtimeClassName: nvidia
-    securityContext:
-      seccompProfile:
-        type: RuntimeDefault
+#   defaultPodOptions:
+#     nodeSelector:
+#       nvidia.com/gpu.product: "NVIDIA-GeForce-GTX-1660-SUPER"
+#     tolerations:
+#       - key: "dedicated"
+#         operator: "Equal"
+#         value: "vllm"
+#         effect: "NoSchedule"
+#     runtimeClassName: nvidia
+#     securityContext:
+#       seccompProfile:
+#         type: RuntimeDefault
 
-  controllers:
-    main:
-      containers:
-        main:
-          env:
-            OPENCLAW_OPENAI_API_BASE: "http://openclaw-vllm-pool.openclaw-sandbox.svc.cluster.local:8000/v1"
-            OPENCLAW_DEFAULT_MODEL: "openai/casperhansen/llama-3-8b-instruct-awq"
+#   controllers:
+#     main:
+#       containers:
+#         main:
+#           env:
+#             OPENCLAW_OPENAI_API_BASE: "http://openclaw-vllm-pool.openclaw-sandbox.svc.cluster.local:8000/v1"
+#             OPENCLAW_DEFAULT_MODEL: "openai/casperhansen/llama-3-8b-instruct-awq"
             
-            OPENCLAW_OPENAI_API_KEY:
-              valueFrom:
-                secretKeyRef:
-                  name: openclaw-auth
-                  key: token
+#             OPENCLAW_OPENAI_API_KEY:
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: openclaw-auth
+#                   key: token
             
-            LLM_API_BASE: "http://cluster.local"
-            LLM_MODEL_NAME: "meta-llama/Llama-2-7b-hf"
+#             LLM_API_BASE: "http://cluster.local"
+#             LLM_MODEL_NAME: "meta-llama/Llama-2-7b-hf"
             
-            OPENCLAW_GATEWAY_TOKEN:
-              valueFrom:
-                secretKeyRef:
-                  name: openclaw-auth
-                  key: token
+#             OPENCLAW_GATEWAY_TOKEN:
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: openclaw-auth
+#                   key: token
 
-            OPENCLAW_GATEWAY_BIND: "0.0.0.0"
+#             OPENCLAW_GATEWAY_BIND: "0.0.0.0"
                   
-            OPENCLAW_GATEWAY_CONTROLUI_ALLOWEDORIGINS: '["http://openclaw.homelab", "https://openclaw.homelab", "http://localhost:18789", "http://127.0.0.1:18789"]'
-            OPENCLAW_GATEWAY_CONTROLUI_ALLOWINSECUREAUTH: "true"
-            OPENCLAW_GATEWAY_CONTROLUI_DANGEROUSLYALLOWHOSTHEADERORIGINFALLBACK: "true"
+#             OPENCLAW_GATEWAY_CONTROLUI_ALLOWEDORIGINS: '["http://openclaw.homelab", "https://openclaw.homelab", "http://localhost:18789", "http://127.0.0.1:18789"]'
+#             OPENCLAW_GATEWAY_CONTROLUI_ALLOWINSECUREAUTH: "true"
+#             OPENCLAW_GATEWAY_CONTROLUI_DANGEROUSLYALLOWHOSTHEADERORIGINFALLBACK: "true"
 
-    vllm-pool:
-      replicas: 1
-      strategy: Recreate
-      containers:
-        main:
-          image:
-            repository: vllm/vllm-openai
-            tag: "v0.6.4"
-            pullPolicy: IfNotPresent
-          command:
-            - python3
-            - "-m"
-            - vllm.entrypoints.openai.api_server
-          args:
-            - "--model"
-            - "casperhansen/llama-3-8b-instruct-awq"
-            - "--quantization"
-            - "awq"
-            - "--tensor-parallel-size"
-            - "2"
-            - "--gpu-memory-utilization"
-            - "0.85"
-            - "--max-model-len"
-            - "8192"
-            - "--enforce-eager"
-            - "--swap-space"
-            - "0" 
-          env:
-            HUGGING_FACE_HUB_TOKEN: "your_hf_token_here" 
+#     vllm-pool:
+#       replicas: 1
+#       strategy: Recreate
+#       containers:
+#         main:
+#           image:
+#             repository: vllm/vllm-openai
+#             tag: "v0.6.4"
+#             pullPolicy: IfNotPresent
+#           command:
+#             - python3
+#             - "-m"
+#             - vllm.entrypoints.openai.api_server
+#           args:
+#             - "--model"
+#             - "casperhansen/llama-3-8b-instruct-awq"
+#             - "--quantization"
+#             - "awq"
+#             - "--tensor-parallel-size"
+#             - "2"
+#             - "--gpu-memory-utilization"
+#             - "0.85"
+#             - "--max-model-len"
+#             - "8192"
+#             - "--enforce-eager"
+#             - "--swap-space"
+#             - "0" 
+#           env:
+#             HUGGING_FACE_HUB_TOKEN: "your_hf_token_here" 
             
-            VLLM_API_KEY:
-              valueFrom:
-                secretKeyRef:
-                  name: openclaw-auth
-                  key: token
+#             VLLM_API_KEY:
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: openclaw-auth
+#                   key: token
                   
-          resources:
-            requests:
-              nvidia.com/gpu: 2
-              memory: 4Gi
-              cpu: 1000m
-            limits:
-              nvidia.com/gpu: 2
-              memory: 6.5Gi
-              cpu: 4000m
+#           resources:
+#             requests:
+#               nvidia.com/gpu: 2
+#               memory: 4Gi
+#               cpu: 1000m
+#             limits:
+#               nvidia.com/gpu: 2
+#               memory: 6.5Gi
+#               cpu: 4000m
 
-  service:
-    vllm-pool:
-      controller: vllm-pool
-      ports:
-        http:
-          port: 8000
+#   service:
+#     vllm-pool:
+#       controller: vllm-pool
+#       ports:
+#         http:
+#           port: 8000
 
-  ingress:
-    main:
-      enabled: true
-      className: nginx
-      annotations:
-        kubernetes.io/ingress.class: "nginx"
-        nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
-        nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-        nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-      hosts:
-        - host: "openclaw.homelab"
-          paths:
-            - path: /
-              pathType: Prefix
-              service:
-                identifier: main
-                port: http
+#   ingress:
+#     main:
+#       enabled: true
+#       className: nginx
+#       annotations:
+#         kubernetes.io/ingress.class: "nginx"
+#         nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+#         nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+#         nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+#       hosts:
+#         - host: "openclaw.homelab"
+#           paths:
+#             - path: /
+#               pathType: Prefix
+#               service:
+#                 identifier: main
+#                 port: http
 
-  persistence:
-    data:
-      storageClass: "local-path"
+#   persistence:
+#     data:
+#       storageClass: "local-path"
       
-    vllm-cache:
-      enabled: true
-      type: persistentVolumeClaim
-      accessMode: ReadWriteOnce
-      size: 40Gi
-      storageClass: "local-path"
-      advancedMounts:
-        vllm-pool:
-          main:
-            - path: /root/.cache/huggingface
-    shm:
-      enabled: true
-      type: emptyDir
-      medium: Memory
-      sizeLimit: 1Gi 
-      advancedMounts:
-        vllm-pool:
-          main:
-            - path: /dev/shm
+#     vllm-cache:
+#       enabled: true
+#       type: persistentVolumeClaim
+#       accessMode: ReadWriteOnce
+#       size: 40Gi
+#       storageClass: "local-path"
+#       advancedMounts:
+#         vllm-pool:
+#           main:
+#             - path: /root/.cache/huggingface
+#     shm:
+#       enabled: true
+#       type: emptyDir
+#       medium: Memory
+#       sizeLimit: 1Gi 
+#       advancedMounts:
+#         vllm-pool:
+#           main:
+#             - path: /dev/shm
