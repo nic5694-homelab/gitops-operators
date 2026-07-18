@@ -17,9 +17,13 @@ spec:
         app: cloudflare
     spec:
       containers:
-      - image: cloudflare/cloudflared
+      - image: cloudflare/cloudflared:1895-8679787525ed
         name: cloudflared
         resources: {}
+        args:
+        - tunnel
+        - --no-autoupdate
+        - run
         env:
         - name: TUNNEL_TOKEN
           valueFrom:
