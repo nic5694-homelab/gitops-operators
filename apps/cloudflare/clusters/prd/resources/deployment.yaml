@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cloudflare
+  name: cloudflare
+  namespace: cloudflare
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflare
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: cloudflare
+    spec:
+      containers:
+      - image: cloudflared
+        name: cloudflared
+        resources: {}
+      envFrom:
+      - secretRef:
+          name: cloudflare-secret
+status: {}
