@@ -20,7 +20,7 @@ spec:
       - image: cloudflare/cloudflared
         name: cloudflared
         resources: {}
-      envFrom:
-      - secretRef:
-          name: cloudflare-secret
+        envFrom:
+        - secretRef:
+            name: cloudflare-secret
 status: {}
