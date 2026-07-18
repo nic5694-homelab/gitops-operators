@@ -20,7 +20,10 @@ spec:
       - image: cloudflare/cloudflared
         name: cloudflared
         resources: {}
-        envFrom:
-        - secretRef:
-            name: cloudflare-secret
+        env:
+        - name: TUNNEL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-secret
+              key: token
 status: {}
