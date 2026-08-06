@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ids
+  namespace: ids-system-dev
+  labels:
+    app: ids
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ids
+  template:
+    metadata:
+      labels:
+        app: ids
+    spec:
+      containers:
+        - name: ids
+          image: nic5694/ids:0.13
+          env:
+            - name: S3_ENDPOINT
+              value: "https://s3.benmusicgeek.synology.me"
+            - name: IN_PROGRESS
+              value: "true"
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
