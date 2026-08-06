@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: ids
 spec:
-  ingressClassName: ingress-nginx
+  ingressClassName: nginx
   rules:
   - host: ids.homelab
     http:
