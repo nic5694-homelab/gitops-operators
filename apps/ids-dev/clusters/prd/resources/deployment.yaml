@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ids
+  name: ids-dev
   namespace: ids-system-dev
   labels:
-    app: ids
+    app: ids-dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ids
+      app: ids-dev
   template:
     metadata:
       labels:
-        app: ids
+        app: ids-dev
     spec:
       containers:
         - name: ids
@@ -22,7 +22,7 @@ spec:
             - name: S3_ENDPOINT
               value: "https://s3.benmusicgeek.synology.me"
             - name: IN_PROGRESS
-              value: "true"
+              value: "false"
           ports:
             - containerPort: 3000
           resources:
