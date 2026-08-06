@@ -22,7 +22,7 @@ spec:
             - name: S3_ENDPOINT
               value: "https://s3.benmusicgeek.synology.me"
             - name: IN_PROGRESS
-              value: "true"
+              value: "false"
           ports:
             - containerPort: 3000
           resources:
