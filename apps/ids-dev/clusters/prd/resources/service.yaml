@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ids
+  name: ids-dev
   namespace: ids-system-dev
 spec:
   type: ClusterIP
   selector:
-    app: ids
+    app: ids-dev
   ports:
     - name: http
       port: 3000
