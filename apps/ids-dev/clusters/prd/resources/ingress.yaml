@@ -1,7 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ids
+  name: ids-dev
+  namespace: ids-system-dev
 spec:
   ingressClassName: nginx
   rules:
@@ -10,7 +11,7 @@ spec:
       paths:
       - backend:
           service:
-            name: ids
+            name: ids-dev
             port:
               number: 3000
         path: /
