@@ -9,8 +9,6 @@ spec:
     repoURL: https://github.com/nic5694-homelab/gitops-operators.git
     targetRevision: HEAD
     path: components
-    directory:
-      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
