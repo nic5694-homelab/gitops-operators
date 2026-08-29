@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-apps
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - git:
+              repoURL: https://github.com/nic5694-homelab/gitops-operators.git
+              revision: HEAD
+              directories:
+                - path: apps/*
+          - list:
+              elements:
+                - env: dev
+                  cluster: https://kubernetes.default.svc
+                - env: prod
+                  cluster: https://kubernetes.default.svc
+  template:
+    metadata:
+      name: '{{path.basename}}-{{env}}'
+    spec:
+      project: apps-project
+      source:
+        repoURL: https://github.com/nic5694-homelab/gitops-operators.git
+        targetRevision: HEAD
+        path: '{{path}}/overlays/{{env}}'
+      destination:
+        server: '{{cluster}}'
+        namespace: '{{path.basename}}-{{env}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

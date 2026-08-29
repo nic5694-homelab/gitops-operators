@@ -1,5 +1,0 @@
-name: minio
-chart: minio
-repoURL: https://charts.min.io
-version: 5.4.0
-namespace: minio

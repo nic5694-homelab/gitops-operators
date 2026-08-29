@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: core-project
+  namespace: argocd
+spec:
+  description: Core cluster infrastructure and operators
+  sourceRepos:
+    - '*'
+  destinations:
+    - namespace: '*'
+      server: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceBlacklist:
+    - group: ''
+      kind: Namespace
+    - group: ''
+      kind: ResourceQuota
+    - group: ''
+      kind: NetworkPolicy
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: apps-project
+  namespace: argocd
+spec:
+  description: User-facing applications
+  sourceRepos:
+    - '*'
+  destinations:
+    - namespace: '*'
+      server: '*'
+  clusterResourceBlacklist:
+    - group: '*'
+      kind: ClusterRole
+    - group: '*'
+      kind: ClusterRoleBinding
