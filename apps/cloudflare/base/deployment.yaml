@@ -30,4 +30,3 @@ spec:
             secretKeyRef:
               name: cloudflare-secret
               key: token
-status: {}
