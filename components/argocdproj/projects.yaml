@@ -34,10 +34,5 @@ spec:
     - namespace: '*'
       server: '*'
   clusterResourceWhitelist:
-    - group: ''
-      kind: Namespace
-  clusterResourceBlacklist:
     - group: '*'
-      kind: ClusterRole
-    - group: '*'
-      kind: ClusterRoleBinding
+      kind: '*'
