@@ -91,7 +91,7 @@ config: |
   auth_attempts: 5
   block_auth_min: 15
   http_proxy: ""
-  language: "English"
+  language: "en"
   theme: auto
   debug_pprof: false
   web_session_ttl: 720

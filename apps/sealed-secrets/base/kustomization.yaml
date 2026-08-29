@@ -8,3 +8,4 @@ helmCharts:
     releaseName: sealed-secrets
     namespace: sealed-secrets
     valuesFile: values.yaml
+    includeCRDs: true
