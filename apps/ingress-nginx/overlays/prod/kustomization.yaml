@@ -5,16 +5,8 @@ resources:
   - ../../base
 
 patches:
-  - target:
+  - path: service-patch.yaml
+    target:
       kind: Service
       name: ingress-nginx-controller
       namespace: ingress-nginx
-    patch: |
-      apiVersion: v1
-      kind: Service
-      metadata:
-        annotations:
-          metallb.universe.tf/address-pool: default-pool
-          metallb.universe.tf/loadBalancerIPs: "10.0.0.11"
-      spec:
-        type: LoadBalancer
