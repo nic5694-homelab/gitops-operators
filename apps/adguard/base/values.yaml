@@ -154,7 +154,7 @@ config: |
     parental_cache_size: 1048576
     cache_time: 30
     rewrites:
-      - domain: *.homelab 
+      - domain: "*.homelab" 
         answer: 10.0.0.11
     blocked_services: []
     upstream_timeout: 10s
