@@ -27,8 +27,11 @@ spec:
         path: '{{path}}/overlays/{{env}}'
       destination:
         server: '{{cluster}}'
-        namespace: '{{path.basename}}-{{env}}'
+        namespace: '{{path.basename}}'
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
