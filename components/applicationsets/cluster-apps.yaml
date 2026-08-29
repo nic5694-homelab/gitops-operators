@@ -14,8 +14,6 @@ spec:
                 - path: apps/*
           - list:
               elements:
-                - env: dev
-                  cluster: https://kubernetes.default.svc
                 - env: prod
                   cluster: https://kubernetes.default.svc
   template:
