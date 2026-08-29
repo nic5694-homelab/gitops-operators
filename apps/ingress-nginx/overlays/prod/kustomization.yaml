@@ -5,7 +5,7 @@ resources:
   - ../../base
 
 patches:
-  - path: service-patch.yaml
+  - path: svc-patch.yaml
     target:
       kind: Service
       name: ingress-nginx-controller

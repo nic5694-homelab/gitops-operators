@@ -1,7 +1,8 @@
-# apps/ingress-nginx/overlays/prod/service-patch.yaml
+# apps/ingress-nginx/overlays/prod/svc-patch.yaml
 apiVersion: v1
 kind: Service
 metadata:
+  name: ingress-nginx-controller
   annotations:
     metallb.universe.tf/address-pool: default-pool
     metallb.universe.tf/loadBalancerIPs: "10.0.0.11"
