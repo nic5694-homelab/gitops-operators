@@ -1,13 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-resources:
-  - crds.yaml
 helmCharts:
-  - name: actions-runner-controller
-    repo: https://actions-runner-controller.github.io/actions-runner-controller
-    version: 0.23.7
-    releaseName: gha-runner-controller
+  - name: gha-runner-scale-set-controller
+    repo: oci://ghcr.io/actions/actions-runner-controller-charts
+    version: 0.14.2
+    releaseName: arc
     namespace: gha-runner-controller
     valuesFile: values.yaml
     
