@@ -8,3 +8,4 @@ helmCharts:
     releaseName: vcluster-platform
     namespace: vcluster-platform
     valuesFile: values.yaml
+    
