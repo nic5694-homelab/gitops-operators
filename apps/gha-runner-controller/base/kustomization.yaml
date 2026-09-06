@@ -5,7 +5,7 @@ helmCharts:
   - name: actions-runner-controller
     repo: https://actions-runner-controller.github.io/actions-runner-controller
     version: 0.23.7
-    releaseName: actions-runner-controller
+    releaseName: gha-runner-controller
     namespace: gha-runner-controller
     valuesFile: values.yaml
     
