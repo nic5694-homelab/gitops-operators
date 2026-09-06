@@ -1,9 +1,14 @@
 gfd:
   enabled: true
+  sleepInterval: 5m
 affinity: {}
 nodeSelector:
   feature.node.kubernetes.io/pci-10de.present: "true"
-
+nfd:
+  worker:
+    config:
+      core:
+        sleepInterval: 5m
 mps:
   affinity: {}
   nodeSelector:
