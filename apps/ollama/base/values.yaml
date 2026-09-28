@@ -1,0 +1,37 @@
+runtimeClassName: "nvidia"
+
+ollama:
+  gpu:
+    enabled: true
+    type: "nvidia"
+    number: 1
+  models:
+    pull:
+      - "qwen2.5:3b-instruct-q8_0" 
+      - "qwen2.5:7b-instruct-q4_K_M"
+      - "nomic-embed-text"
+
+resources:
+  limits:
+    nvidia.com/gpu: 1
+  requests:
+    nvidia.com/gpu: 1
+
+extraEnv:
+  - name: OLLAMA_KV_CACHE_TYPE
+    value: "q8_0"
+  - name: OLLAMA_NUM_CTX
+    value: "4096"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+  hosts:
+    - host: ollama.homelab
+      paths:
+        - path: /
+          pathType: Prefix
