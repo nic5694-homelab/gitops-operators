@@ -1,6 +1,8 @@
+runtimeClassName: "nvidia"
 gfd:
   enabled: true
   sleepInterval: 5m
+  runtimeClassName: "nvidia"
 affinity: {}
 nodeSelector:
   feature.node.kubernetes.io/pci-10de.present: "true"
