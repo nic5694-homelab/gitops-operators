@@ -18,12 +18,16 @@ resources:
   requests:
     nvidia.com/gpu: 4
 
+persistentVolume:
+  enabled: true
+  size: 50Gi
+
 extraEnv:
   - name: OLLAMA_KV_CACHE_TYPE
     value: "q8_0"
+  # 128K context window for hermes
   - name: OLLAMA_NUM_CTX
-    value: "4096"
-
+    value: "131072" 
 ingress:
   enabled: true
   className: "nginx"

@@ -1,0 +1,18 @@
+# ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hermes-ingress
+spec:
+  ingressClassName: nginx 
+  rules:
+    - host: hermes.homelab
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hermes-webui
+                port:
+                  number: 8780

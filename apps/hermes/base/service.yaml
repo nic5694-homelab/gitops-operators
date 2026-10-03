@@ -1,0 +1,12 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: hermes-webui
+spec:
+  selector:
+    app.kubernetes.io/name: homelab-agent 
+  ports:
+    - protocol: TCP
+      port: 8780
+      targetPort: 8780

@@ -1,0 +1,15 @@
+# hermes-instance.yaml
+apiVersion: hermes.nousresearch.com/v1alpha1
+kind: HermesInstance
+metadata:
+  name: homelab-agent
+spec:
+  provider: openai
+  baseUrl: "http:/ollama.ollama:11434/v1" 
+  model: "nous-hermes2" 
+  envFrom:
+    - secretRef:
+        name: hermes-homelab-secrets
+  webUI:
+    enabled: true
+    port: 8780
