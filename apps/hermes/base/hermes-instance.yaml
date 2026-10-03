@@ -1,4 +1,4 @@
-apiVersion: hermes.agent/v1alpha1
+apiVersion: hermes.agent/v1
 kind: HermesInstance
 metadata:
   name: homelab-agent
