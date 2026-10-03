@@ -1,5 +1,4 @@
-# hermes-instance.yaml
-apiVersion: hermes.nousresearch.com/v1alpha1
+apiVersion: hermes.agent/v1alpha1
 kind: HermesInstance
 metadata:
   name: homelab-agent
