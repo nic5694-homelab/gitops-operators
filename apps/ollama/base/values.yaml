@@ -4,18 +4,19 @@ ollama:
   gpu:
     enabled: true
     type: "nvidia"
-    number: 1
+    number: 4
   models:
     pull:
       - "qwen2.5:3b-instruct-q8_0" 
       - "qwen2.5:7b-instruct-q4_K_M"
       - "nomic-embed-text"
+      - "hermes3:8b"  
 
 resources:
   limits:
-    nvidia.com/gpu: 1
+    nvidia.com/gpu: 4
   requests:
-    nvidia.com/gpu: 1
+    nvidia.com/gpu: 4
 
 extraEnv:
   - name: OLLAMA_KV_CACHE_TYPE
