@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: concordia-predictions-frontend
+  namespace: concordia-predictions
+  annotations:
+    # Argo CD Image Updater – tracks :latest tag on Docker Hub
+    argocd-image-updater.argoproj.io/image-list: frontend=nic5694/concordia-predictions-frontend
+    argocd-image-updater.argoproj.io/frontend.update-strategy: latest
+    argocd-image-updater.argoproj.io/frontend.tag-match: "^latest$"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: concordia-predictions-frontend
+  template:
+    metadata:
+      labels:
+        app: concordia-predictions-frontend
+    spec:
+      containers:
+        - name: frontend
+          # Image Updater will rewrite this line in the overlay kustomization
+          image: nic5694/concordia-predictions-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            # nginx.conf template uses envsubst to replace ${BACKEND_API_URL}
+            # with the in-cluster backend service address at container startup.
+            - name: BACKEND_API_URL
+              value: "http://concordia-predictions-backend:8080"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 15
+

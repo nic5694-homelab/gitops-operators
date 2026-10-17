@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: concordia-predictions-backend
+  namespace: concordia-predictions
+  annotations:
+    # Argo CD Image Updater – tracks :latest tag on Docker Hub
+    argocd-image-updater.argoproj.io/image-list: backend=nic5694/concordia-predictions-backend
+    argocd-image-updater.argoproj.io/backend.update-strategy: latest
+    argocd-image-updater.argoproj.io/backend.tag-match: "^latest$"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: concordia-predictions-backend
+  template:
+    metadata:
+      labels:
+        app: concordia-predictions-backend
+    spec:
+      containers:
+        - name: backend
+          # Image Updater will rewrite this line in the overlay kustomization
+          image: nic5694/concordia-predictions-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+          # Resource limits appropriate for a homelab single-node cluster
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            failureThreshold: 3
+

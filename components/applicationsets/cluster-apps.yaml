@@ -12,6 +12,9 @@ spec:
               revision: HEAD
               directories:
                 - path: apps/*
+                # Managed by its own Application manifest (with Image Updater annotations)
+                - path: apps/concordia-predictions
+                  exclude: true
           - list:
               elements:
                 - env: prod

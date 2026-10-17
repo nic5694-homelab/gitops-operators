@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: concordia-predictions-prod
+  namespace: argocd
+  annotations:
+    # ── Argo CD Image Updater ───────────────────────────────────────────────
+    # Write back updated image tags into the kustomize overlay via a git commit
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/git-branch: main
+
+    # Backend image – track :latest on Docker Hub
+    argocd-image-updater.argoproj.io/image-list: >-
+      backend=nic5694/concordia-predictions-backend,
+      frontend=nic5694/concordia-predictions-frontend
+
+    argocd-image-updater.argoproj.io/backend.update-strategy: latest
+    argocd-image-updater.argoproj.io/backend.tag-match: "^latest$"
+    argocd-image-updater.argoproj.io/backend.kustomize.image-name: nic5694/concordia-predictions-backend
+
+    # Frontend image – track :latest on Docker Hub
+    argocd-image-updater.argoproj.io/frontend.update-strategy: latest
+    argocd-image-updater.argoproj.io/frontend.tag-match: "^latest$"
+    argocd-image-updater.argoproj.io/frontend.kustomize.image-name: nic5694/concordia-predictions-frontend
+spec:
+  project: apps-project
+  source:
+    repoURL: https://github.com/nic5694-homelab/gitops-operators.git
+    targetRevision: HEAD
+    path: apps/concordia-predictions/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: concordia-predictions
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+
