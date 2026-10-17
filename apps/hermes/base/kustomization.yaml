@@ -3,9 +3,6 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  - ingress.yaml
-  - secret-sealed.yaml
-  - service.yaml
   - hermes-instance.yaml
 
 helmCharts:

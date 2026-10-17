@@ -3,12 +3,125 @@ kind: HermesInstance
 metadata:
   name: homelab-agent
 spec:
-  provider: openai
-  baseUrl: "http:/ollama.ollama:11434/v1" 
-  model: "nous-hermes2" 
+  image:
+    repository: ghcr.io/paperclipinc/hermes-agent
+    tag: "v0.16.0"
+  config:
+    mergeMode: merge
+    raw:
+      logging:
+        level: info
+      provider: openai
+      baseUrl: "http://ollama.ollama:11434/v1"
+      model: "hermes3:8b"
+
   envFrom:
     - secretRef:
         name: hermes-homelab-secrets
-  webUI:
-    enabled: true
-    port: 8780
+  env:
+    - name: DEPLOY_ENV
+      value: production
+  storage:
+    persistence:
+      enabled: true
+      size: 10Gi
+  sidecars:
+    - name: hermes-webui
+      image: ghcr.io/nesquena/hermes-webui:0.52.404
+      ports:
+        - containerPort: 8787
+      readinessProbe:
+        httpGet:
+          path: /health
+          port: 8787
+        initialDelaySeconds: 20
+        periodSeconds: 5
+      env:
+        - name: HERMES_HOME
+          value: /opt/data
+        - name: HERMES_WEBUI_STATE_DIR
+          value: /opt/data/webui
+        - name: HERMES_WEBUI_BIND_HOST
+          value: "0.0.0.0"
+        - name: HERMES_WEBUI_BIND_PORT
+          value: "8787"
+        - name: HERMES_WEBUI_AUTH_MODE
+          value: "basic"
+        - name: HERMES_WEBUI_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: hermes-homelab-secrets
+              key: WEBUI_PASSWORD
+      volumeMounts:
+        - name: data 
+          mountPath: /opt/data
+        - name: app-cache
+          mountPath: /app
+
+  networking:
+    service:
+      type: ClusterIP
+      ports:
+        - name: webui
+          port: 8787
+          targetPort: 8787
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/proxy-body-size: 32m
+      host: hermes.homelab
+      path: /
+      pathType: Prefix
+      servicePortName: webui
+
+  security:
+    networkPolicy:
+      enabled: true
+      allowedIngressNamespaces:
+        - ingress-nginx
+      additionalEgress:
+        - ports:
+            - port: 11434
+              protocol: TCP
+          to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: ollama
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2
+      memory: 4Gi
+
+  workspace:
+    bootstrap:
+      enabled: true
+    initialFiles:
+      - path: notes/welcome.md
+        content: |
+          # Welcome
+          This file was seeded by the operator.
+      - path: notes/playbook.md
+        content: |
+          ## Daily playbook
+          1. Check inbox.
+          2. Run the morning brief.
+
+  profileStore:
+    honcho:
+      enabled: true
+      image:
+        repository: ghcr.io/plastic-labs/honcho
+        tag: "latest" 
+      persistence:
+        enabled: true
+        size: 20Gi
+      apiKeySecretRef: 
+        name: hermes-honcho
+        key: apiKey

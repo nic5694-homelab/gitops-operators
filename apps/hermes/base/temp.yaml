@@ -1,0 +1,27 @@
+apiVersion: hermes.agent/v1
+kind: HermesInstance
+metadata:
+  name: gitops-hermes
+spec:
+  image:
+    repository: ghcr.io/paperclipinc/hermes-agent
+    tag: "v2026.5.29.2"
+  storage:
+    persistence:
+      enabled: true
+      size: 10Gi
+  config:
+    mergeMode: merge
+    raw:
+      logging:
+        level: info
+  selfConfigure:
+    enabled: true
+    allowedActions: [skills, config, envVars, workspaceFiles, profiles]
+    protectedKeys:
+      - "spec.image.*"
+      - "spec.security.*"
+      - "spec.storage.*"
+      - "spec.backup.*"
+      - "spec.networking.*"
+      - "spec.gateways.*"
