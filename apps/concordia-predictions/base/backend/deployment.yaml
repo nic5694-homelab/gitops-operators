@@ -33,27 +33,27 @@ spec:
             - name: DB_HOST
               valueFrom:
                 secretKeyRef:
-                  name: concordia-predictions-app
+                  name: pg-17-ha-app
                   key: host 
             - name: DB_PORT
               valueFrom:
                 secretKeyRef:
-                  name: concordia-predictions-app
+                  name: pg-17-ha-app
                   key: port
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: concordia-predictions-app 
+                  name: pg-17-ha-app
                   key: dbname
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: concordia-predictions-app
+                  name: pg-17-ha-app
                   key: user
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: concordia-predictions-app
+                  name: pg-17-ha-app
                   key: password
           resources:
             requests:
