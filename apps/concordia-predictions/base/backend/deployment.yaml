@@ -30,8 +30,6 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
-            - name: SPRING_PROFILES_ACTIVE
-              value: prod
             - name: DB_HOST
               valueFrom:
                 secretKeyRef:
