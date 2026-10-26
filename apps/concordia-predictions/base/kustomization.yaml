@@ -11,4 +11,5 @@ resources:
   - frontend/service.yaml
   - frontend/ingress.yaml
   - backend/ingress.yaml
+  - db/cluster.yaml
 
