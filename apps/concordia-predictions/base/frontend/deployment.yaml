@@ -30,7 +30,7 @@ spec:
           env:
             # nginx.conf template uses envsubst to replace ${BACKEND_API_URL}
             # with the in-cluster backend service address at container startup.
-            - name: BACKEND_API_URL
+            - name: VITE_BACKEND_API_URL
               value: "http://api.concordia-predictions.homelab:8080"
           resources:
             requests:
