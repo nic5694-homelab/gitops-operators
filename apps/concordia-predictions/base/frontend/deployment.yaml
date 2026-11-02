@@ -32,6 +32,8 @@ spec:
             # with the in-cluster backend service address at container startup.
             - name: VITE_BACKEND_API_URL
               value: "http://api.concordia-predictions.homelab:8080"
+            - name: BACKEND_API_URL
+              value: "http://api.concordia-predictions.homelab"
           resources:
             requests:
               cpu: 50m
