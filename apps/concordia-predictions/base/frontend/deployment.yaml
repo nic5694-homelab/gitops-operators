@@ -28,12 +28,10 @@ spec:
               containerPort: 80
               protocol: TCP
           env:
-            # nginx.conf template uses envsubst to replace ${BACKEND_API_URL}
-            # with the in-cluster backend service address at container startup.
-            - name: VITE_BACKEND_API_URL
-              value: "http://api.concordia-predictions.homelab:8080"
+            # NGINX reverse-proxy uses envsubst to replace ${BACKEND_API_URL}
+            # in the config template with the in-cluster backend service address.
             - name: BACKEND_API_URL
-              value: "http://api.concordia-predictions.homelab"
+              value: "http://api.concordia-predictions-backend:8080"
           resources:
             requests:
               cpu: 50m
@@ -53,4 +51,3 @@ spec:
               port: 80
             initialDelaySeconds: 10
             periodSeconds: 15
-

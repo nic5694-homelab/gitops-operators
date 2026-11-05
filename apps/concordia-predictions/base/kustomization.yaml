@@ -12,5 +12,4 @@ resources:
   - frontend/ingress.yaml
   - backend/ingress.yaml
   - db/cluster.yaml
-  - frontend/configmap-index.yaml
 
