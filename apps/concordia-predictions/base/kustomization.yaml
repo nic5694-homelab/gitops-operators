@@ -12,4 +12,5 @@ resources:
   - frontend/ingress.yaml
   - backend/ingress.yaml
   - db/cluster.yaml
+  - sealedsecret-conn-string.yaml
 

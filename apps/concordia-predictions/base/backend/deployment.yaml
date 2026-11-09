@@ -30,6 +30,8 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
+            - name: CLIENT_ORIGIN_URL
+              value: "http://concordia-predictions.homelab,http://localhost"
             - name: DB_HOST
               valueFrom:
                 secretKeyRef:
@@ -55,6 +57,11 @@ spec:
                 secretKeyRef:
                   name: pg-17-ha-app
                   key: password
+            - name: AZURE_COMMUNICATION_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: acs-creds
+                  key: connection_string
           resources:
             requests:
               cpu: 100m
