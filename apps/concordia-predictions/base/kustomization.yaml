@@ -13,4 +13,5 @@ resources:
   - backend/ingress.yaml
   - db/cluster.yaml
   - sealedsecret-conn-string.yaml
+  - rabbitmq/rabbitmq-cluster.yaml
 
